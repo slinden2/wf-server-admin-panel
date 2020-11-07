@@ -13,7 +13,7 @@ import { ObjectType, Field, ID } from "type-graphql";
 export class User extends BaseEntity {
   @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
-  id: number;
+  id: string;
 
   @Field()
   @CreateDateColumn()
@@ -30,4 +30,8 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   username: string;
+
+  @Field()
+  @Column({ default: "USER" })
+  role: "ADMIN" | "USER";
 }

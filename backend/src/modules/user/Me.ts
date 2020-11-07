@@ -1,15 +1,15 @@
-import { Resolver, Query, Ctx } from "type-graphql";
+import { Resolver, Query, Ctx, UseMiddleware } from "type-graphql";
 import { User } from "../../entity/User";
-import { MyContext } from "../../types/MyContext";
+import { isAuth } from "../../middleware/isAuth";
+import { Context } from "../../types/Context";
 
 @Resolver()
 export class MeResolver {
+  @UseMiddleware(isAuth)
   @Query(() => User, { nullable: true })
-  async me(@Ctx() ctx: MyContext): Promise<User | undefined> {
-    typeof ctx;
-
+  async me(@Ctx() ctx: Context): Promise<User | undefined> {
     const user = await User.findOne({
-      where: { id: 1 },
+      where: { id: ctx.session?.id },
     });
 
     return user;
