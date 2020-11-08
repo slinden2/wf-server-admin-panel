@@ -17,7 +17,6 @@ export class LoginResolver {
   @Mutation(() => User!, { nullable: true })
   async login(@Arg("code") code: string): Promise<EncodeResult> {
     const discordUser = await getDiscordUser(code);
-    console.log(discordUser);
 
     let user = await User.findOne({ where: { discordId: discordUser.id } });
     if (user) {

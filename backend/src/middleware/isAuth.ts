@@ -40,17 +40,11 @@ export const isAuth: MiddlewareFn<Context> = async (resolverData, next) => {
     decodedSession.session
   );
 
-  console.log("decodedSession.type", decodedSession.type);
-  console.log("expiration", expiration);
-
   if (expiration === "expired") {
     throw new AuthenticationError(
       `Authorization token has expired. Please create a new authorization token.`
     );
   }
-
-  console.log("decodedSession.session.issued", decodedSession.session.issued);
-  console.log("decodedSession.session.expires", decodedSession.session.expires);
 
   let session: Session;
 
