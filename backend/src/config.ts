@@ -28,6 +28,7 @@ const discordClientId = _discordClientId;
 const discordClientSecret = _discordClientSecret;
 const discordRedirectUri = _discordRedirectUri;
 const jwtSecret = _jwtSecret;
+const pidPath = env === "development" ? "src/pid" : "C:\\wreckfest";
 
 const connParams: ConnectionOptions = {
   type: "sqlite",
@@ -50,5 +51,8 @@ export default {
   },
   auth: {
     jwtSecret,
+  },
+  servers: {
+    pidPath,
   },
 };

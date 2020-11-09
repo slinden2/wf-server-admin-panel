@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsc && node dist/index.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn -r dotenv/config src/index.ts",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "updateServers": "cross-env NODE_ENV=development ts-node-dev -r dotenv/config src/jobs/updateServers.ts"
   },
   "keywords": [],
   "author": "",
@@ -31,6 +32,7 @@
     "class-validator": "^0.12.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "graphql": "^15.4.0",
     "jwt-simple": "^0.5.6",
     "reflect-metadata": "^0.1.13",

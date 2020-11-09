@@ -7,6 +7,7 @@ import path from "path";
 
 import config from "./config";
 import { createSchema } from "./utils/createSchema";
+import { updateServers } from "./jobs/updateServers";
 
 console.log(config);
 
@@ -42,6 +43,12 @@ const main = async () => {
     console.log(
       `Server ready at http://localhost:${port}${apolloServer.graphqlPath}`
     );
+
+    updateServers();
+
+    setInterval(() => {
+      updateServers();
+    }, 60000);
   });
 };
 
