@@ -5,7 +5,7 @@ import { Context } from "../../types/Context";
 
 @Resolver()
 export class MeResolver {
-  @UseMiddleware(isAuth)
+  @UseMiddleware(isAuth("USER"))
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: Context): Promise<User | undefined> {
     const user = await User.findOne({
