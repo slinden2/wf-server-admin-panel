@@ -5,8 +5,12 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Ctx } from "type-graphql";
+import { ServerUser } from "./ServerUser";
+import { Server } from "./Server";
+import { Context } from "../types/Context";
 
 @ObjectType()
 @Entity({ name: "users" })
@@ -34,4 +38,7 @@ export class User extends BaseEntity {
   @Field()
   @Column({ default: "USER" })
   role: "ADMIN" | "USER";
+
+  @OneToMany(() => ServerUser, (su) => su.user)
+  serverConnection: ServerUser[];
 }

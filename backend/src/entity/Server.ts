@@ -5,8 +5,10 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { ObjectType, Field, ID } from "type-graphql";
+import { ServerUser } from "./ServerUser";
 
 @ObjectType()
 @Entity({ name: "servers" })
@@ -30,4 +32,7 @@ export class Server extends BaseEntity {
   @Field()
   @Column("integer")
   pid: number;
+
+  @OneToMany(() => ServerUser, (su) => su.server)
+  userConnection: ServerUser[];
 }
