@@ -41,6 +41,7 @@ export class LoginResolver {
     };
 
     const encodeResult = encodeSession(config.auth.jwtSecret, partialSession);
+    console.log(encodeResult);
 
     return encodeResult;
   }

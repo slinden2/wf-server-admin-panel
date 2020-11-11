@@ -33,6 +33,10 @@ export class Server extends BaseEntity {
   @Column("integer")
   pid: number;
 
+  @Field()
+  @Column("text", { nullable: true })
+  displayName: string;
+
   @OneToMany(() => ServerUser, (su) => su.server)
   userConnection: ServerUser[];
 }
