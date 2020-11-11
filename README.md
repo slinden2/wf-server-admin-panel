@@ -7,3 +7,4 @@
 - WFAP_DISCORD_CLIENT_ID - From Discord dev portal
 - WFAP_DISCORD_CLIENT_SECRET - From Discord dev portal
 - WFAP_DISCORD_REDIRECT_URL - From Discord dev portal
+- WFAP_ADMIN_DISCORD_ID - Admin users Discord ID

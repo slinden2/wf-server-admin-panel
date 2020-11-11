@@ -6,15 +6,21 @@ const _port = process.env.WFAP_PORT;
 const _discordClientId = process.env.WFAP_DISCORD_CLIENT_ID;
 const _discordClientSecret = process.env.WFAP_DISCORD_CLIENT_SECRET;
 const _discordRedirectUri = process.env.WFAP_DISCORD_REDIRECT_URI;
+const _adminDiscordId = process.env.WFAP_ADMIN_DISCORD_ID;
 const _jwtSecret = process.env.WFAP_JWT_SECRET;
 
 if (!isEnvironment(_env)) {
   throw new Error("NODE_ENV must be either 'development' or 'production'");
 }
 
-if (!_discordClientId || !_discordClientSecret || !_discordRedirectUri) {
+if (
+  !_discordClientId ||
+  !_discordClientSecret ||
+  !_discordRedirectUri ||
+  !_adminDiscordId
+) {
   throw new Error(
-    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET or WFAP_DISCORD_REDIRECT_URL missing"
+    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET, WFAP_DISCORD_REDIRECT_URL or WFAP_ADMIN_DISCORD_ID missing"
   );
 }
 
@@ -27,6 +33,7 @@ const port = Number(_port) || 4000;
 const discordClientId = _discordClientId;
 const discordClientSecret = _discordClientSecret;
 const discordRedirectUri = _discordRedirectUri;
+const adminDiscordId = _adminDiscordId;
 const jwtSecret = _jwtSecret;
 const pidPath = env === "development" ? "src/pid" : "C:\\wreckfest";
 
@@ -48,6 +55,7 @@ export default {
     clientId: discordClientId,
     clientSecret: discordClientSecret,
     redirectUri: discordRedirectUri,
+    adminId: adminDiscordId,
   },
   auth: {
     jwtSecret,

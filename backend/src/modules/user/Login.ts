@@ -27,6 +27,7 @@ export class LoginResolver {
       user = await User.create({
         discordId: discordUser.id,
         username: discordUser.username,
+        role: config.discord.adminId === discordUser.id ? "ADMIN" : "USER",
       }).save();
       console.log("New user created:");
     }
