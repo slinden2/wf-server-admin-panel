@@ -8,14 +8,14 @@ import { SetUserServersInput } from "./setUserServers/SetUserServersInput";
 @Resolver()
 export class SetUserServersResolver {
   @UseMiddleware(isAuth("ADMIN"))
-  @Mutation(() => User!, { nullable: true })
+  @Mutation(() => Boolean!)
   async setUserServers(
     @Arg("data") data: SetUserServersInput
-  ): Promise<User | null> {
+  ): Promise<boolean> {
     const user = await User.findOne({ id: data.userId });
 
     if (!user) {
-      return null;
+      return false;
     }
 
     // Remove users previous servers
@@ -33,6 +33,6 @@ export class SetUserServersResolver {
 
     await Promise.all(newServerUsers);
 
-    return user;
+    return true;
   }
 }
