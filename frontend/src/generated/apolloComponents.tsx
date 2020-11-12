@@ -45,7 +45,7 @@ export type Server = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login?: Maybe<User>;
+  login?: Maybe<EncodeResult>;
   setUserServers: Scalars['Boolean'];
   setDisplayName: Server;
 };
@@ -63,6 +63,13 @@ export type MutationSetUserServersArgs = {
 
 export type MutationSetDisplayNameArgs = {
   data: SetDisplayNameInput;
+};
+
+export type EncodeResult = {
+  __typename?: 'EncodeResult';
+  token: Scalars['String'];
+  expires: Scalars['Float'];
+  issued: Scalars['Float'];
 };
 
 export type SetUserServersInput = {
@@ -83,12 +90,8 @@ export type LoginMutationVariables = Exact<{
 export type LoginMutation = (
   { __typename?: 'Mutation' }
   & { login?: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'discordId' | 'username'>
-    & { servers: Array<(
-      { __typename?: 'Server' }
-      & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName'>
-    )> }
+    { __typename?: 'EncodeResult' }
+    & Pick<EncodeResult, 'token' | 'issued' | 'expires'>
   )> }
 );
 
@@ -126,17 +129,9 @@ export type MeQuery = (
 export const LoginDocument = gql`
     mutation Login($code: String!) {
   login(code: $code) {
-    id
-    discordId
-    username
-    servers {
-      id
-      createdDate
-      updatedDate
-      name
-      pid
-      displayName
-    }
+    token
+    issued
+    expires
   }
 }
     `;
