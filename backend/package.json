@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist/index.js",
+    "start": "node dist/index.js",
+    "build:server": "tsc -p tsconfig.json",
+    "bundle:build": "node ./src/scripts/createProductionBundle.js",
     "dev": "cross-env NODE_ENV=development ts-node-dev --respawn -r dotenv/config src/index.ts",
     "lint": "eslint . --ext .ts",
     "updateServers": "cross-env NODE_ENV=development ts-node-dev -r dotenv/config src/jobs/updateServers.ts"

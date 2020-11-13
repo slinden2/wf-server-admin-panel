@@ -9,7 +9,7 @@ import config from "./config";
 import { createSchema } from "./utils/createSchema";
 import { updateServers } from "./jobs/updateServers";
 
-console.log(config);
+console.log("config", config);
 
 const main = async () => {
   await createConnection(config.sqlite.connParams);
