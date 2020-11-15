@@ -7,10 +7,9 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from "typeorm";
-import { ObjectType, Field, ID, Ctx } from "type-graphql";
+import { ObjectType, Field, ID } from "type-graphql";
 import { ServerUser } from "./ServerUser";
 import { Server } from "./Server";
-import { Context } from "../types/Context";
 
 @ObjectType()
 @Entity({ name: "users" })
@@ -43,9 +42,9 @@ export class User extends BaseEntity {
   serverConnection: ServerUser[];
 
   @Field(() => [Server])
-  async servers(@Ctx() ctx: Context): Promise<Server[]> {
+  async servers(): Promise<Server[]> {
     // Admin gets to see all servers
-    if (ctx.session?.role === "ADMIN") {
+    if (this.role === "ADMIN") {
       return await Server.find();
     }
 
@@ -65,6 +64,9 @@ export class User extends BaseEntity {
     const servers: Server[] = serverUsers.map((su) => {
       const newServer = new Server();
       newServer.id = su.server.id;
+      newServer.createdDate = su.server.createdDate;
+      newServer.updatedDate = su.server.updatedDate;
+      newServer.displayName = su.server.displayName;
       newServer.name = su.server.name;
       newServer.pid = su.server.pid;
       return newServer;

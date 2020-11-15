@@ -33,7 +33,7 @@ export class Server extends BaseEntity {
   @Column("integer")
   pid: number;
 
-  @Field()
+  @Field({ nullable: true })
   @Column("text", { nullable: true })
   displayName: string;
 
