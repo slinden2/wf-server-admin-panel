@@ -31,6 +31,10 @@ const main = async () => {
 
   if (config.env === "production") {
     app.use(express.static(path.join(__dirname, "client")));
+    app.use(
+      "/.well-known/pki-validation",
+      express.static(path.join(__dirname, "cert"))
+    );
     app.get("*", (_req, res) => {
       res.sendFile(path.resolve(__dirname, "client", "index.html"));
     });
