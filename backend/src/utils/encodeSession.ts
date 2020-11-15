@@ -2,6 +2,7 @@ import { encode, TAlgorithm } from "jwt-simple";
 import { Session } from "../types/Session";
 import { PartialSession } from "../types/PartialSession";
 import { EncodeResult } from "../types/EncodeResult";
+import config from "../config";
 
 export const encodeSession = (
   secretKey: string,
@@ -9,8 +10,7 @@ export const encodeSession = (
 ): EncodeResult => {
   const algorithm: TAlgorithm = "HS512";
   const issued = Date.now();
-  const fifteenMinutesInMs = 15 * 60 * 1000;
-  const expires = issued + fifteenMinutesInMs;
+  const expires = issued + config.token.expirationTime;
   const session: Session = {
     ...partialSession,
     issued: issued,

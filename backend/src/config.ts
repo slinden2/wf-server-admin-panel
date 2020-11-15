@@ -21,7 +21,7 @@ if (
   !_adminDiscordId
 ) {
   throw new Error(
-    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET, WFAP_DISCORD_REDIRECT_URL or WFAP_ADMIN_DISCORD_ID missing"
+    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET, WFAP_DISCORD_REDIRECT_URI or WFAP_ADMIN_DISCORD_ID missing"
   );
 }
 
@@ -41,6 +41,8 @@ const discordRedirectUri = _discordRedirectUri;
 const adminDiscordId = _adminDiscordId;
 const jwtSecret = _jwtSecret;
 const pidPath = _pidPath;
+const tokenExpirationTime = 15 * 60 * 1000; // fifteen minutes
+const tokenGracePeriod = 3 * 60 * 60 * 1000; // three hours
 
 const connParams: ConnectionOptions = {
   type: "sqlite",
@@ -67,5 +69,9 @@ export default {
   },
   servers: {
     pidPath,
+  },
+  token: {
+    expirationTime: tokenExpirationTime,
+    gracePeriod: tokenGracePeriod,
   },
 };

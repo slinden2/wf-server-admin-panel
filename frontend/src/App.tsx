@@ -9,8 +9,12 @@ import {
 import "./App.css";
 import Auth from "./components/user/Auth";
 import config from "./config";
+import { useMeQuery } from "./generated/apolloComponents";
 
 const App = () => {
+  const res = useMeQuery();
+  console.log(res);
+
   return (
     <Router>
       <header>
