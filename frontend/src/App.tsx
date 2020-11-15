@@ -9,17 +9,17 @@ import {
 import "./App.css";
 import Auth from "./components/user/Auth";
 import config from "./config";
-import { useMeQuery } from "./generated/apolloComponents";
+import { useAuthContext } from "./context/AuthContext";
 
 const App = () => {
-  const res = useMeQuery();
-  console.log(res);
+  const { logoutUser } = useAuthContext();
 
   return (
     <Router>
       <header>
         <NavLink to="/">Home</NavLink>
         <a href={config.discordAuthUrl}>Login</a>
+        <span onClick={() => logoutUser()}>Logout</span>
       </header>
       <Switch>
         <Route exact path="/">

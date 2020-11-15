@@ -35,7 +35,6 @@ const renewLink = new ApolloLink((operation, forward) => {
 
     if (headers) {
       const renewedToken = headers.get("x-renewed-jwt-token");
-      console.log("renewedToken", renewedToken);
       if (renewedToken) {
         localStorage.setItem("token", renewedToken);
       }
