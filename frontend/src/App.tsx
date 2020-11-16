@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import ServerList from "./components/server/ServerList";
 import Auth from "./components/user/Auth";
 import config from "./config";
 import { useAuthContext } from "./context/AuthContext";
@@ -23,7 +24,7 @@ const App = () => {
       </header>
       <Switch>
         <Route exact path="/">
-          Wreckfest
+          <ServerList />
         </Route>
         <Route exact path="/auth">
           <Auth />
