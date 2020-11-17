@@ -1,0 +1,7 @@
+mutation Login($code: String!) {
+  login(code: $code) {
+    token
+    issued
+    expires
+  }
+}

@@ -1,0 +1,3 @@
+mutation RunCommand($serverId: String!, $type: String!, $command: String) {
+  runCommand(data: { serverId: $serverId, type: $type, command: $command })
+}

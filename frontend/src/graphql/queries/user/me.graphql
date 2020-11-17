@@ -1,0 +1,15 @@
+query Me {
+  me {
+    id
+    discordId
+    username
+    servers {
+      id
+      createdDate
+      updatedDate
+      name
+      pid
+      displayName
+    }
+  }
+}
