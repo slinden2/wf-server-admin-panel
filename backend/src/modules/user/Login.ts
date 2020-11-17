@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Arg, Query } from "type-graphql";
+import { Resolver, Mutation, Arg } from "type-graphql";
 
 import { getDiscordUser } from "./login/getDiscordUser";
 import { User } from "../../entity/User";
@@ -9,11 +9,6 @@ import { EncodeResult } from "../../types/EncodeResult";
 
 @Resolver()
 export class LoginResolver {
-  @Query(() => String!) // Query needed for schema creation
-  hello(): string {
-    return "Hello World!";
-  }
-
   @Mutation(() => EncodeResult!, { nullable: true })
   async login(@Arg("code") code: string): Promise<EncodeResult> {
     const discordUser = await getDiscordUser(code);

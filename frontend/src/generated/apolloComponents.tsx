@@ -17,7 +17,6 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   getUsers?: Maybe<Array<User>>;
-  hello: Scalars['String'];
   me?: Maybe<User>;
 };
 
@@ -40,7 +39,7 @@ export type Server = {
   updatedDate: Scalars['DateTime'];
   name: Scalars['String'];
   pid: Scalars['Float'];
-  displayName: Scalars['String'];
+  displayName?: Maybe<Scalars['String']>;
 };
 
 export type Mutation = {
@@ -48,6 +47,7 @@ export type Mutation = {
   login?: Maybe<EncodeResult>;
   setUserServers: Scalars['Boolean'];
   setDisplayName: Server;
+  runCommand: Scalars['Boolean'];
 };
 
 
@@ -63,6 +63,11 @@ export type MutationSetUserServersArgs = {
 
 export type MutationSetDisplayNameArgs = {
   data: SetDisplayNameInput;
+};
+
+
+export type MutationRunCommandArgs = {
+  data: RunCommandInput;
 };
 
 export type EncodeResult = {
@@ -81,6 +86,49 @@ export type SetDisplayNameInput = {
   serverId: Scalars['String'];
   name: Scalars['String'];
 };
+
+export type RunCommandInput = {
+  serverId: Scalars['String'];
+  type: Scalars['String'];
+  command?: Maybe<Scalars['String']>;
+};
+
+export type RunCommandMutationVariables = Exact<{
+  serverId: Scalars['String'];
+  type: Scalars['String'];
+  command?: Maybe<Scalars['String']>;
+}>;
+
+
+export type RunCommandMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'runCommand'>
+);
+
+export type SetDisplayNameMutationVariables = Exact<{
+  serverId: Scalars['String'];
+  name: Scalars['String'];
+}>;
+
+
+export type SetDisplayNameMutation = (
+  { __typename?: 'Mutation' }
+  & { setDisplayName: (
+    { __typename?: 'Server' }
+    & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName'>
+  ) }
+);
+
+export type SetUserServersMutationVariables = Exact<{
+  userId: Scalars['String'];
+  serverIds: Array<Scalars['String']>;
+}>;
+
+
+export type SetUserServersMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'setUserServers'>
+);
 
 export type LoginMutationVariables = Exact<{
   code: Scalars['String'];
@@ -126,6 +174,107 @@ export type MeQuery = (
 );
 
 
+export const RunCommandDocument = gql`
+    mutation RunCommand($serverId: String!, $type: String!, $command: String) {
+  runCommand(data: {serverId: $serverId, type: $type, command: $command})
+}
+    `;
+export type RunCommandMutationFn = ApolloReactCommon.MutationFunction<RunCommandMutation, RunCommandMutationVariables>;
+
+/**
+ * __useRunCommandMutation__
+ *
+ * To run a mutation, you first call `useRunCommandMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRunCommandMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [runCommandMutation, { data, loading, error }] = useRunCommandMutation({
+ *   variables: {
+ *      serverId: // value for 'serverId'
+ *      type: // value for 'type'
+ *      command: // value for 'command'
+ *   },
+ * });
+ */
+export function useRunCommandMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RunCommandMutation, RunCommandMutationVariables>) {
+        return ApolloReactHooks.useMutation<RunCommandMutation, RunCommandMutationVariables>(RunCommandDocument, baseOptions);
+      }
+export type RunCommandMutationHookResult = ReturnType<typeof useRunCommandMutation>;
+export type RunCommandMutationResult = ApolloReactCommon.MutationResult<RunCommandMutation>;
+export type RunCommandMutationOptions = ApolloReactCommon.BaseMutationOptions<RunCommandMutation, RunCommandMutationVariables>;
+export const SetDisplayNameDocument = gql`
+    mutation SetDisplayName($serverId: String!, $name: String!) {
+  setDisplayName(data: {serverId: $serverId, name: $name}) {
+    id
+    createdDate
+    updatedDate
+    name
+    pid
+    displayName
+  }
+}
+    `;
+export type SetDisplayNameMutationFn = ApolloReactCommon.MutationFunction<SetDisplayNameMutation, SetDisplayNameMutationVariables>;
+
+/**
+ * __useSetDisplayNameMutation__
+ *
+ * To run a mutation, you first call `useSetDisplayNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetDisplayNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setDisplayNameMutation, { data, loading, error }] = useSetDisplayNameMutation({
+ *   variables: {
+ *      serverId: // value for 'serverId'
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useSetDisplayNameMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetDisplayNameMutation, SetDisplayNameMutationVariables>) {
+        return ApolloReactHooks.useMutation<SetDisplayNameMutation, SetDisplayNameMutationVariables>(SetDisplayNameDocument, baseOptions);
+      }
+export type SetDisplayNameMutationHookResult = ReturnType<typeof useSetDisplayNameMutation>;
+export type SetDisplayNameMutationResult = ApolloReactCommon.MutationResult<SetDisplayNameMutation>;
+export type SetDisplayNameMutationOptions = ApolloReactCommon.BaseMutationOptions<SetDisplayNameMutation, SetDisplayNameMutationVariables>;
+export const SetUserServersDocument = gql`
+    mutation SetUserServers($userId: String!, $serverIds: [String!]!) {
+  setUserServers(data: {userId: $userId, serverIds: $serverIds})
+}
+    `;
+export type SetUserServersMutationFn = ApolloReactCommon.MutationFunction<SetUserServersMutation, SetUserServersMutationVariables>;
+
+/**
+ * __useSetUserServersMutation__
+ *
+ * To run a mutation, you first call `useSetUserServersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetUserServersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setUserServersMutation, { data, loading, error }] = useSetUserServersMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      serverIds: // value for 'serverIds'
+ *   },
+ * });
+ */
+export function useSetUserServersMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SetUserServersMutation, SetUserServersMutationVariables>) {
+        return ApolloReactHooks.useMutation<SetUserServersMutation, SetUserServersMutationVariables>(SetUserServersDocument, baseOptions);
+      }
+export type SetUserServersMutationHookResult = ReturnType<typeof useSetUserServersMutation>;
+export type SetUserServersMutationResult = ApolloReactCommon.MutationResult<SetUserServersMutation>;
+export type SetUserServersMutationOptions = ApolloReactCommon.BaseMutationOptions<SetUserServersMutation, SetUserServersMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($code: String!) {
   login(code: $code) {

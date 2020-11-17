@@ -1,6 +1,7 @@
-import React, { RefObject } from "react";
+import React from "react";
 
 import { useAuthContext } from "../../context/AuthContext";
+import { useRunCommandMutation } from "../../generated/apolloComponents";
 import { ServerColumn } from "../../types/ServerColumn";
 import { ServerRow } from "../../types/ServerRow";
 import ServerTable from "./ServerTable";
@@ -34,6 +35,10 @@ const columns: ServerColumn[] = [
 
 const ServerList: React.FC = () => {
   const { user } = useAuthContext();
+  const [runCommand] = useRunCommandMutation();
+  const elementsRef = React.useRef(
+    user.data?.me?.servers.map(() => React.createRef<HTMLInputElement>())
+  );
 
   if (user.loading) {
     return <div>Loading...</div>;
@@ -43,36 +48,47 @@ const ServerList: React.FC = () => {
     return <div>No servers available</div>;
   }
 
-  const handleButtonClick = (
+  const handleButtonClick = async (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     command: "START" | "STOP",
     serverId: string
   ) => {
     switch (command) {
       case "START":
-        console.log(`Starting server ${serverId}`);
+        await runCommand({ variables: { serverId, type: "START" } });
         break;
       case "STOP":
-        console.log(`Stopping server ${serverId}`);
+        await runCommand({ variables: { serverId, type: "STOP" } });
         break;
       default:
         return;
     }
   };
 
-  const handleSendCommand = (
+  const handleSendCommand = async (
     event: React.KeyboardEvent<HTMLInputElement>,
-    serverId: string
+    serverId: string,
+    index: number
   ) => {
     if (event.key === "Enter") {
-      console.log(
-        `Sending command ${event.currentTarget.value} to ${serverId}`
-      );
-      event.currentTarget.value = "";
+      await runCommand({
+        variables: {
+          serverId,
+          type: "COMMAND",
+          command: event.currentTarget.value,
+        },
+      });
+
+      // Clear input field
+      if (elementsRef.current && elementsRef.current[index].current) {
+        elementsRef.current[index].current!.value = "";
+      }
     }
   };
 
-  const tableData: ServerRow[] = user.data.me.servers.map((srv) => {
+  const tableData: ServerRow[] = user.data.me.servers.map((srv, index) => {
+    const curRef = elementsRef.current && elementsRef.current[index];
+
     return {
       ...srv,
       start: (
@@ -87,8 +103,9 @@ const ServerList: React.FC = () => {
       ),
       sendCommand: (
         <input
+          ref={curRef}
           type="text"
-          onKeyDown={(event) => handleSendCommand(event, srv.id)}
+          onKeyDown={(event) => handleSendCommand(event, srv.id, index)}
         />
       ),
     };
