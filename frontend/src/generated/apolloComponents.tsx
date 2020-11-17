@@ -18,6 +18,13 @@ export type Query = {
   __typename?: 'Query';
   getUsers?: Maybe<Array<User>>;
   me?: Maybe<User>;
+  getLog?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryGetLogArgs = {
+  numOfRows?: Maybe<Scalars['Float']>;
+  serverId: Scalars['String'];
 };
 
 export type User = {
@@ -141,6 +148,17 @@ export type LoginMutation = (
     { __typename?: 'EncodeResult' }
     & Pick<EncodeResult, 'token' | 'issued' | 'expires'>
   )> }
+);
+
+export type GetLogQueryVariables = Exact<{
+  serverId: Scalars['String'];
+  numOfRows?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type GetLogQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'getLog'>
 );
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
@@ -309,6 +327,38 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetLogDocument = gql`
+    query GetLog($serverId: String!, $numOfRows: Float) {
+  getLog(serverId: $serverId, numOfRows: $numOfRows)
+}
+    `;
+
+/**
+ * __useGetLogQuery__
+ *
+ * To run a query within a React component, call `useGetLogQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLogQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLogQuery({
+ *   variables: {
+ *      serverId: // value for 'serverId'
+ *      numOfRows: // value for 'numOfRows'
+ *   },
+ * });
+ */
+export function useGetLogQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetLogQuery, GetLogQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetLogQuery, GetLogQueryVariables>(GetLogDocument, baseOptions);
+      }
+export function useGetLogLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetLogQuery, GetLogQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetLogQuery, GetLogQueryVariables>(GetLogDocument, baseOptions);
+        }
+export type GetLogQueryHookResult = ReturnType<typeof useGetLogQuery>;
+export type GetLogLazyQueryHookResult = ReturnType<typeof useGetLogLazyQuery>;
+export type GetLogQueryResult = ApolloReactCommon.QueryResult<GetLogQuery, GetLogQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   getUsers {

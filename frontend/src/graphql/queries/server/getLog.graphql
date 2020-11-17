@@ -1,0 +1,3 @@
+query GetLog($serverId: String!, $numOfRows: Float) {
+  getLog(serverId: $serverId, numOfRows: $numOfRows)
+}

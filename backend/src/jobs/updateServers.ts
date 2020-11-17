@@ -24,7 +24,7 @@ export const updateServers = async () => {
         });
 
         return {
-          name: fileName,
+          fileName,
           pid: Number(pid),
         };
       }
@@ -36,14 +36,17 @@ export const updateServers = async () => {
   // Check if there are new servers to add in the pid directory
   const serversToAdd = currentServers.filter(
     (curServer) =>
-      !serversInDb.find((dbServer) => dbServer.name === curServer.name)
+      !serversInDb.find(
+        (dbServer) =>
+          dbServer.name === path.basename(curServer.fileName, ".pid")
+      )
   );
 
   // Add new servers
   if (serversToAdd.length) {
     const newServers = serversToAdd.map((server) => {
       const newServer = new Server();
-      newServer.name = server.name;
+      newServer.name = path.basename(server.fileName, ".pid");
       newServer.pid = server.pid;
       return newServer;
     });
@@ -55,7 +58,7 @@ export const updateServers = async () => {
   const serversToUpdate: Promise<Server>[] = [];
   for (const curServer of currentServers) {
     const serverInDb = serversInDb.find(
-      (serverDb) => serverDb.name === curServer.name
+      (serverDb) => serverDb.name === path.basename(curServer.fileName, ".pid")
     );
 
     if (serverInDb && serverInDb.pid !== curServer.pid) {

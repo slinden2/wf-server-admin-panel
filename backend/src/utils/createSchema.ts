@@ -6,6 +6,7 @@ import { MeResolver } from "../modules/user/Me";
 import { SetUserServersResolver } from "../modules/server/SetUserServers";
 import { SetDisplayNameResolver } from "../modules/server/SetDisplayName";
 import { RunCommandResolver } from "../modules/server/RunCommand";
+import { GetLogResolver } from "../modules/server/GetLog";
 
 export const createSchema = (): Promise<GraphQLSchema> =>
   buildSchema({
@@ -16,5 +17,6 @@ export const createSchema = (): Promise<GraphQLSchema> =>
       SetUserServersResolver,
       SetDisplayNameResolver,
       RunCommandResolver,
+      GetLogResolver,
     ],
   });

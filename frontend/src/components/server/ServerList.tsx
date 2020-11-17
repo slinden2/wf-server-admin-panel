@@ -4,6 +4,7 @@ import { useAuthContext } from "../../context/AuthContext";
 import { useRunCommandMutation } from "../../generated/apolloComponents";
 import { ServerColumn } from "../../types/ServerColumn";
 import { ServerRow } from "../../types/ServerRow";
+import LogPane from "./LogPane";
 import ServerTable from "./ServerTable";
 
 const columns: ServerColumn[] = [
@@ -28,6 +29,10 @@ const columns: ServerColumn[] = [
     selector: "stop",
   },
   {
+    name: "",
+    selector: "getLog",
+  },
+  {
     name: "Send command",
     selector: "sendCommand",
   },
@@ -39,6 +44,7 @@ const ServerList: React.FC = () => {
   const elementsRef = React.useRef(
     user.data?.me?.servers.map(() => React.createRef<HTMLInputElement>())
   );
+  const [logSrvId, setLogSrvId] = React.useState<string>("");
 
   if (user.loading) {
     return <div>Loading...</div>;
@@ -49,8 +55,8 @@ const ServerList: React.FC = () => {
   }
 
   const handleButtonClick = async (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    command: "START" | "STOP",
+    _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    command: "START" | "STOP" | "GET_LOG",
     serverId: string
   ) => {
     switch (command) {
@@ -59,6 +65,9 @@ const ServerList: React.FC = () => {
         break;
       case "STOP":
         await runCommand({ variables: { serverId, type: "STOP" } });
+        break;
+      case "GET_LOG":
+        setLogSrvId(serverId);
         break;
       default:
         return;
@@ -101,6 +110,13 @@ const ServerList: React.FC = () => {
           Stop
         </button>
       ),
+      getLog: (
+        <button
+          onClick={(event) => handleButtonClick(event, "GET_LOG", srv.id)}
+        >
+          Get log
+        </button>
+      ),
       sendCommand: (
         <input
           ref={curRef}
@@ -114,6 +130,7 @@ const ServerList: React.FC = () => {
   return (
     <div>
       <ServerTable data={tableData} columns={columns} />
+      <LogPane serverId={logSrvId} />
     </div>
   );
 };
