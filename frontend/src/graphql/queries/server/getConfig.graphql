@@ -1,0 +1,3 @@
+query GetConfig($serverId: String!) {
+  getConfig(serverId: $serverId)
+}

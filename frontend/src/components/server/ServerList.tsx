@@ -5,6 +5,7 @@ import { useRunCommandMutation } from "../../generated/apolloComponents";
 import { ServerColumn } from "../../types/ServerColumn";
 import { ServerRow } from "../../types/ServerRow";
 import LogPane from "./LogPane";
+import ConfigPane from "./ConfigPane";
 import ServerTable from "./ServerTable";
 
 const columns: ServerColumn[] = [
@@ -33,6 +34,10 @@ const columns: ServerColumn[] = [
     selector: "getLog",
   },
   {
+    name: "",
+    selector: "getConfig",
+  },
+  {
     name: "Send command",
     selector: "sendCommand",
   },
@@ -45,6 +50,8 @@ const ServerList: React.FC = () => {
     user.data?.me?.servers.map(() => React.createRef<HTMLInputElement>())
   );
   const [logSrvId, setLogSrvId] = React.useState<string>("");
+  const [configSrvId, setConfigSrvId] = React.useState<string>("");
+  const [showPane, setShowPane] = React.useState<"LOG" | "CONFIG" | null>(null);
 
   if (user.loading) {
     return <div>Loading...</div>;
@@ -56,7 +63,7 @@ const ServerList: React.FC = () => {
 
   const handleButtonClick = async (
     _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    command: "START" | "STOP" | "GET_LOG",
+    command: "START" | "STOP" | "GET_LOG" | "GET_CONFIG",
     serverId: string
   ) => {
     switch (command) {
@@ -68,6 +75,11 @@ const ServerList: React.FC = () => {
         break;
       case "GET_LOG":
         setLogSrvId(serverId);
+        setShowPane("LOG");
+        break;
+      case "GET_CONFIG":
+        setConfigSrvId(serverId);
+        setShowPane("CONFIG");
         break;
       default:
         return;
@@ -117,6 +129,13 @@ const ServerList: React.FC = () => {
           Get log
         </button>
       ),
+      getConfig: (
+        <button
+          onClick={(event) => handleButtonClick(event, "GET_CONFIG", srv.id)}
+        >
+          Get config
+        </button>
+      ),
       sendCommand: (
         <input
           ref={curRef}
@@ -130,7 +149,10 @@ const ServerList: React.FC = () => {
   return (
     <div>
       <ServerTable data={tableData} columns={columns} />
-      <LogPane serverId={logSrvId} />
+      {showPane === "LOG" && <LogPane serverId={logSrvId} />}
+      {showPane === "CONFIG" && (
+        <ConfigPane serverId={configSrvId} setShowPane={setShowPane} />
+      )}
     </div>
   );
 };

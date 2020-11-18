@@ -19,11 +19,17 @@ export type Query = {
   getUsers?: Maybe<Array<User>>;
   me?: Maybe<User>;
   getLog?: Maybe<Scalars['String']>;
+  getConfig?: Maybe<Scalars['String']>;
 };
 
 
 export type QueryGetLogArgs = {
   numOfRows?: Maybe<Scalars['Float']>;
+  serverId: Scalars['String'];
+};
+
+
+export type QueryGetConfigArgs = {
   serverId: Scalars['String'];
 };
 
@@ -148,6 +154,16 @@ export type LoginMutation = (
     { __typename?: 'EncodeResult' }
     & Pick<EncodeResult, 'token' | 'issued' | 'expires'>
   )> }
+);
+
+export type GetConfigQueryVariables = Exact<{
+  serverId: Scalars['String'];
+}>;
+
+
+export type GetConfigQuery = (
+  { __typename?: 'Query' }
+  & Pick<Query, 'getConfig'>
 );
 
 export type GetLogQueryVariables = Exact<{
@@ -327,6 +343,37 @@ export function useLoginMutation(baseOptions?: ApolloReactHooks.MutationHookOpti
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = ApolloReactCommon.MutationResult<LoginMutation>;
 export type LoginMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const GetConfigDocument = gql`
+    query GetConfig($serverId: String!) {
+  getConfig(serverId: $serverId)
+}
+    `;
+
+/**
+ * __useGetConfigQuery__
+ *
+ * To run a query within a React component, call `useGetConfigQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetConfigQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetConfigQuery({
+ *   variables: {
+ *      serverId: // value for 'serverId'
+ *   },
+ * });
+ */
+export function useGetConfigQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetConfigQuery, GetConfigQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetConfigQuery, GetConfigQueryVariables>(GetConfigDocument, baseOptions);
+      }
+export function useGetConfigLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetConfigQuery, GetConfigQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetConfigQuery, GetConfigQueryVariables>(GetConfigDocument, baseOptions);
+        }
+export type GetConfigQueryHookResult = ReturnType<typeof useGetConfigQuery>;
+export type GetConfigLazyQueryHookResult = ReturnType<typeof useGetConfigLazyQuery>;
+export type GetConfigQueryResult = ApolloReactCommon.QueryResult<GetConfigQuery, GetConfigQueryVariables>;
 export const GetLogDocument = gql`
     query GetLog($serverId: String!, $numOfRows: Float) {
   getLog(serverId: $serverId, numOfRows: $numOfRows)
