@@ -61,6 +61,7 @@ export type Mutation = {
   setUserServers: Scalars['Boolean'];
   setDisplayName: Server;
   runCommand: Scalars['Boolean'];
+  saveConfig: Scalars['Boolean'];
 };
 
 
@@ -81,6 +82,12 @@ export type MutationSetDisplayNameArgs = {
 
 export type MutationRunCommandArgs = {
   data: RunCommandInput;
+};
+
+
+export type MutationSaveConfigArgs = {
+  newConfig: Scalars['String'];
+  serverId: Scalars['String'];
 };
 
 export type EncodeResult = {
@@ -116,6 +123,17 @@ export type RunCommandMutationVariables = Exact<{
 export type RunCommandMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'runCommand'>
+);
+
+export type SaveConfigMutationVariables = Exact<{
+  serverId: Scalars['String'];
+  newConfig: Scalars['String'];
+}>;
+
+
+export type SaveConfigMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'saveConfig'>
 );
 
 export type SetDisplayNameMutationVariables = Exact<{
@@ -240,6 +258,37 @@ export function useRunCommandMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type RunCommandMutationHookResult = ReturnType<typeof useRunCommandMutation>;
 export type RunCommandMutationResult = ApolloReactCommon.MutationResult<RunCommandMutation>;
 export type RunCommandMutationOptions = ApolloReactCommon.BaseMutationOptions<RunCommandMutation, RunCommandMutationVariables>;
+export const SaveConfigDocument = gql`
+    mutation SaveConfig($serverId: String!, $newConfig: String!) {
+  saveConfig(serverId: $serverId, newConfig: $newConfig)
+}
+    `;
+export type SaveConfigMutationFn = ApolloReactCommon.MutationFunction<SaveConfigMutation, SaveConfigMutationVariables>;
+
+/**
+ * __useSaveConfigMutation__
+ *
+ * To run a mutation, you first call `useSaveConfigMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveConfigMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveConfigMutation, { data, loading, error }] = useSaveConfigMutation({
+ *   variables: {
+ *      serverId: // value for 'serverId'
+ *      newConfig: // value for 'newConfig'
+ *   },
+ * });
+ */
+export function useSaveConfigMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<SaveConfigMutation, SaveConfigMutationVariables>) {
+        return ApolloReactHooks.useMutation<SaveConfigMutation, SaveConfigMutationVariables>(SaveConfigDocument, baseOptions);
+      }
+export type SaveConfigMutationHookResult = ReturnType<typeof useSaveConfigMutation>;
+export type SaveConfigMutationResult = ApolloReactCommon.MutationResult<SaveConfigMutation>;
+export type SaveConfigMutationOptions = ApolloReactCommon.BaseMutationOptions<SaveConfigMutation, SaveConfigMutationVariables>;
 export const SetDisplayNameDocument = gql`
     mutation SetDisplayName($serverId: String!, $name: String!) {
   setDisplayName(data: {serverId: $serverId, name: $name}) {

@@ -1,0 +1,3 @@
+mutation SaveConfig($serverId: String!, $newConfig: String!) {
+  saveConfig(serverId: $serverId, newConfig: $newConfig)
+}

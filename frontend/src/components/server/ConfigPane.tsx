@@ -1,5 +1,8 @@
 import React from "react";
-import { useGetConfigLazyQuery } from "../../generated/apolloComponents";
+import {
+  useGetConfigLazyQuery,
+  useSaveConfigMutation,
+} from "../../generated/apolloComponents";
 
 interface Props {
   serverId: string | undefined;
@@ -10,6 +13,8 @@ const ConfigPane: React.FC<Props> = ({ serverId, setShowPane }) => {
   const [getConfig, getConfigResult] = useGetConfigLazyQuery({
     fetchPolicy: "no-cache",
   });
+  const [saveConfig, saveConfigResult] = useSaveConfigMutation();
+  const configRef = React.useRef<HTMLTextAreaElement>(null);
 
   React.useEffect(() => {
     const callGetConfig = async () => {
@@ -20,16 +25,28 @@ const ConfigPane: React.FC<Props> = ({ serverId, setShowPane }) => {
     callGetConfig();
   }, [serverId, getConfig]);
 
-  const logString = getConfigResult.data?.getConfig;
+  const handleSave = async () => {
+    const newConfig = configRef.current?.value;
+    if (newConfig && serverId) {
+      await saveConfig({ variables: { serverId, newConfig } });
+      await getConfig({ variables: { serverId } });
+    }
+  };
 
-  if (!logString) {
+  if (getConfigResult.loading || saveConfigResult.loading) {
+    return <div>Loading...</div>;
+  }
+
+  const configString = getConfigResult.data?.getConfig;
+
+  if (!configString) {
     return <div>No config found</div>;
   }
 
   return (
     <div>
-      <textarea defaultValue={logString} />
-      <button>Save</button>
+      <textarea defaultValue={configString} ref={configRef} />
+      <button onClick={() => handleSave()}>Save</button>
       <button onClick={() => setShowPane(null)}>Close</button>
     </div>
   );

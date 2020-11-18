@@ -8,6 +8,7 @@ import { SetDisplayNameResolver } from "../modules/server/SetDisplayName";
 import { RunCommandResolver } from "../modules/server/RunCommand";
 import { GetLogResolver } from "../modules/server/GetLog";
 import { GetConfigResolver } from "../modules/server/GetConfig";
+import { SaveConfigResolver } from "../modules/server/SaveConfig";
 
 export const createSchema = (): Promise<GraphQLSchema> =>
   buildSchema({
@@ -20,5 +21,6 @@ export const createSchema = (): Promise<GraphQLSchema> =>
       RunCommandResolver,
       GetLogResolver,
       GetConfigResolver,
+      SaveConfigResolver,
     ],
   });
