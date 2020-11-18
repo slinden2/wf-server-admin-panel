@@ -9,6 +9,7 @@ import { RunCommandResolver } from "../modules/server/RunCommand";
 import { GetLogResolver } from "../modules/server/GetLog";
 import { GetConfigResolver } from "../modules/server/GetConfig";
 import { SaveConfigResolver } from "../modules/server/SaveConfig";
+import { GetServersResolver } from "../modules/server/GetServers";
 
 export const createSchema = (): Promise<GraphQLSchema> =>
   buildSchema({
@@ -22,5 +23,6 @@ export const createSchema = (): Promise<GraphQLSchema> =>
       GetLogResolver,
       GetConfigResolver,
       SaveConfigResolver,
+      GetServersResolver,
     ],
   });

@@ -20,6 +20,7 @@ export type Query = {
   me?: Maybe<User>;
   getLog?: Maybe<Scalars['String']>;
   getConfig?: Maybe<Scalars['String']>;
+  getServers?: Maybe<Array<Server>>;
 };
 
 
@@ -58,7 +59,7 @@ export type Server = {
 export type Mutation = {
   __typename?: 'Mutation';
   login?: Maybe<EncodeResult>;
-  setUserServers: Scalars['Boolean'];
+  setUserServers: Array<ServerUser>;
   setDisplayName: Server;
   runCommand: Scalars['Boolean'];
   saveConfig: Scalars['Boolean'];
@@ -95,6 +96,12 @@ export type EncodeResult = {
   token: Scalars['String'];
   expires: Scalars['Float'];
   issued: Scalars['Float'];
+};
+
+export type ServerUser = {
+  __typename?: 'ServerUser';
+  serverId: Scalars['String'];
+  userId: Scalars['String'];
 };
 
 export type SetUserServersInput = {
@@ -158,7 +165,10 @@ export type SetUserServersMutationVariables = Exact<{
 
 export type SetUserServersMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'setUserServers'>
+  & { setUserServers: Array<(
+    { __typename?: 'ServerUser' }
+    & Pick<ServerUser, 'userId' | 'serverId'>
+  )> }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -195,6 +205,17 @@ export type GetLogQuery = (
   & Pick<Query, 'getLog'>
 );
 
+export type GetServersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetServersQuery = (
+  { __typename?: 'Query' }
+  & { getServers?: Maybe<Array<(
+    { __typename?: 'Server' }
+    & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName'>
+  )>> }
+);
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -217,7 +238,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'discordId' | 'username'>
+    & Pick<User, 'id' | 'discordId' | 'username' | 'role'>
     & { servers: Array<(
       { __typename?: 'Server' }
       & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName'>
@@ -329,7 +350,10 @@ export type SetDisplayNameMutationResult = ApolloReactCommon.MutationResult<SetD
 export type SetDisplayNameMutationOptions = ApolloReactCommon.BaseMutationOptions<SetDisplayNameMutation, SetDisplayNameMutationVariables>;
 export const SetUserServersDocument = gql`
     mutation SetUserServers($userId: String!, $serverIds: [String!]!) {
-  setUserServers(data: {userId: $userId, serverIds: $serverIds})
+  setUserServers(data: {userId: $userId, serverIds: $serverIds}) {
+    userId
+    serverId
+  }
 }
     `;
 export type SetUserServersMutationFn = ApolloReactCommon.MutationFunction<SetUserServersMutation, SetUserServersMutationVariables>;
@@ -455,6 +479,43 @@ export function useGetLogLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookO
 export type GetLogQueryHookResult = ReturnType<typeof useGetLogQuery>;
 export type GetLogLazyQueryHookResult = ReturnType<typeof useGetLogLazyQuery>;
 export type GetLogQueryResult = ApolloReactCommon.QueryResult<GetLogQuery, GetLogQueryVariables>;
+export const GetServersDocument = gql`
+    query GetServers {
+  getServers {
+    id
+    createdDate
+    updatedDate
+    name
+    pid
+    displayName
+  }
+}
+    `;
+
+/**
+ * __useGetServersQuery__
+ *
+ * To run a query within a React component, call `useGetServersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetServersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetServersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetServersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetServersQuery, GetServersQueryVariables>) {
+        return ApolloReactHooks.useQuery<GetServersQuery, GetServersQueryVariables>(GetServersDocument, baseOptions);
+      }
+export function useGetServersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetServersQuery, GetServersQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<GetServersQuery, GetServersQueryVariables>(GetServersDocument, baseOptions);
+        }
+export type GetServersQueryHookResult = ReturnType<typeof useGetServersQuery>;
+export type GetServersLazyQueryHookResult = ReturnType<typeof useGetServersLazyQuery>;
+export type GetServersQueryResult = ApolloReactCommon.QueryResult<GetServersQuery, GetServersQueryVariables>;
 export const GetUsersDocument = gql`
     query GetUsers {
   getUsers {
@@ -506,6 +567,7 @@ export const MeDocument = gql`
     id
     discordId
     username
+    role
     servers {
       id
       createdDate

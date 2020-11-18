@@ -1,3 +1,6 @@
 mutation SetUserServers($userId: String!, $serverIds: [String!]!) {
-  setUserServers(data: { userId: $userId, serverIds: $serverIds })
+  setUserServers(data: { userId: $userId, serverIds: $serverIds }) {
+    userId
+    serverId
+  }
 }

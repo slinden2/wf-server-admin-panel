@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Entity,
@@ -8,11 +9,14 @@ import {
 import { Server } from "./Server";
 import { User } from "./User";
 
+@ObjectType()
 @Entity()
 export class ServerUser extends BaseEntity {
+  @Field()
   @PrimaryColumn()
   serverId: string;
 
+  @Field()
   @PrimaryColumn()
   userId: string;
 

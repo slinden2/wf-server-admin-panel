@@ -3,6 +3,7 @@ query Me {
     id
     discordId
     username
+    role
     servers {
       id
       createdDate
