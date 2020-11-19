@@ -41,7 +41,9 @@ export class RunCommandResolver {
         );
         break;
       case Command.COMMAND:
-        console.log(`autohotkeyu64 test.ahk ${data.command} ${server?.pid}`);
+        console.log(
+          `autohotkeyu64 D:\\OneDrive\\WFShare\\ahk\\wfap_send_command.ahk "${data.command}" ${server?.pid}`
+        );
         break;
       case Command.REBOOT:
         console.log('C:\\Windows\\System32\\schtasks.exe /run /tn "Reboot"');
