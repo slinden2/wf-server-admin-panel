@@ -115,14 +115,23 @@ export type SetDisplayNameInput = {
 };
 
 export type RunCommandInput = {
-  serverId: Scalars['String'];
-  type: Scalars['String'];
+  type: Command;
+  serverId?: Maybe<Scalars['String']>;
   command?: Maybe<Scalars['String']>;
 };
 
+export enum Command {
+  Start = 'START',
+  Stop = 'STOP',
+  Command = 'COMMAND',
+  Reboot = 'REBOOT',
+  UpdateMods = 'UPDATE_MODS',
+  UpdateWfServer = 'UPDATE_WF_SERVER'
+}
+
 export type RunCommandMutationVariables = Exact<{
-  serverId: Scalars['String'];
-  type: Scalars['String'];
+  type: Command;
+  serverId?: Maybe<Scalars['String']>;
   command?: Maybe<Scalars['String']>;
 }>;
 
@@ -248,7 +257,7 @@ export type MeQuery = (
 
 
 export const RunCommandDocument = gql`
-    mutation RunCommand($serverId: String!, $type: String!, $command: String) {
+    mutation RunCommand($type: Command!, $serverId: String, $command: String) {
   runCommand(data: {serverId: $serverId, type: $type, command: $command})
 }
     `;
@@ -267,8 +276,8 @@ export type RunCommandMutationFn = ApolloReactCommon.MutationFunction<RunCommand
  * @example
  * const [runCommandMutation, { data, loading, error }] = useRunCommandMutation({
  *   variables: {
- *      serverId: // value for 'serverId'
  *      type: // value for 'type'
+ *      serverId: // value for 'serverId'
  *      command: // value for 'command'
  *   },
  * });

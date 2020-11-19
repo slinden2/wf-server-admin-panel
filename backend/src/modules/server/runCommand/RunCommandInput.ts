@@ -1,14 +1,27 @@
 import { IsUUID } from "class-validator";
-import { InputType, Field } from "type-graphql";
+import { InputType, Field, registerEnumType } from "type-graphql";
+
+export enum Command {
+  START = "START",
+  STOP = "STOP",
+  COMMAND = "COMMAND",
+  REBOOT = "REBOOT",
+  UPDATE_MODS = "UPDATE_MODS",
+  UPDATE_WF_SERVER = "UPDATE_WF_SERVER",
+}
+
+registerEnumType(Command, {
+  name: "Command",
+});
 
 @InputType()
 export class RunCommandInput {
-  @Field()
+  @Field(() => Command)
+  type: Command;
+
+  @Field({ nullable: true })
   @IsUUID()
   serverId: string;
-
-  @Field()
-  type: "START" | "STOP" | "COMMAND";
 
   @Field({ nullable: true })
   command: string;

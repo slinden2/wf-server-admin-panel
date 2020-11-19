@@ -1,7 +1,10 @@
 import React from "react";
 
 import { useAuthContext } from "../../context/AuthContext";
-import { useRunCommandMutation } from "../../generated/apolloComponents";
+import {
+  Command,
+  useRunCommandMutation,
+} from "../../generated/apolloComponents";
 import { ServerColumn } from "../../types/ServerColumn";
 import { ServerRow } from "../../types/ServerRow";
 import LogPane from "./LogPane";
@@ -68,10 +71,10 @@ const ServerList: React.FC = () => {
   ) => {
     switch (command) {
       case "START":
-        await runCommand({ variables: { serverId, type: "START" } });
+        await runCommand({ variables: { serverId, type: Command.Start } });
         break;
       case "STOP":
-        await runCommand({ variables: { serverId, type: "STOP" } });
+        await runCommand({ variables: { serverId, type: Command.Stop } });
         break;
       case "GET_LOG":
         setLogSrvId(serverId);
@@ -95,7 +98,7 @@ const ServerList: React.FC = () => {
       await runCommand({
         variables: {
           serverId,
-          type: "COMMAND",
+          type: Command.Command,
           command: event.currentTarget.value,
         },
       });
@@ -148,6 +151,7 @@ const ServerList: React.FC = () => {
 
   return (
     <div>
+      <h2>My Servers</h2>
       <ServerTable data={tableData} columns={columns} />
       {showPane === "LOG" && <LogPane serverId={logSrvId} />}
       {showPane === "CONFIG" && (

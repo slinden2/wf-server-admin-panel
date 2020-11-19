@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import AdminCommands from "./components/server/AdminCommands";
 import ServerList from "./components/server/ServerList";
 import Auth from "./components/user/Auth";
 import UserList from "./components/user/UserList";
@@ -26,6 +27,7 @@ const App = () => {
       </header>
       <Switch>
         <Route exact path="/">
+          {isAdmin && <AdminCommands />}
           <ServerList />
         </Route>
         <Route exact path="/auth">
