@@ -50,7 +50,7 @@ const ServerList: React.FC = () => {
   const { user } = useAuthContext();
   const [runCommand] = useRunCommandMutation();
   const elementsRef = React.useRef(
-    user.data?.me?.servers.map(() => React.createRef<HTMLInputElement>())
+    Array.from({ length: 20 }).map(() => React.createRef<HTMLInputElement>())
   );
   const [logSrvId, setLogSrvId] = React.useState<string>("");
   const [configSrvId, setConfigSrvId] = React.useState<string>("");
@@ -66,7 +66,7 @@ const ServerList: React.FC = () => {
 
   const handleButtonClick = async (
     _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    command: "START" | "STOP" | "GET_LOG" | "GET_CONFIG",
+    command: Command.Start | Command.Stop | "GET_LOG" | "GET_CONFIG",
     serverId: string
   ) => {
     switch (command) {
@@ -104,24 +104,28 @@ const ServerList: React.FC = () => {
       });
 
       // Clear input field
-      if (elementsRef.current && elementsRef.current[index].current) {
+      if (elementsRef.current[index].current) {
         elementsRef.current[index].current!.value = "";
       }
     }
   };
 
   const tableData: ServerRow[] = user.data.me.servers.map((srv, index) => {
-    const curRef = elementsRef.current && elementsRef.current[index];
+    const curRef = elementsRef.current[index];
 
     return {
       ...srv,
       start: (
-        <button onClick={(event) => handleButtonClick(event, "START", srv.id)}>
+        <button
+          onClick={(event) => handleButtonClick(event, Command.Start, srv.id)}
+        >
           Start
         </button>
       ),
       stop: (
-        <button onClick={(event) => handleButtonClick(event, "STOP", srv.id)}>
+        <button
+          onClick={(event) => handleButtonClick(event, Command.Stop, srv.id)}
+        >
           Stop
         </button>
       ),
