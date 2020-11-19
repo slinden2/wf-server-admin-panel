@@ -35,7 +35,8 @@ export class SaveConfigResolver {
 
     await fs.writeFile(
       `${config.servers.pidPath}/${server.name}.cfg`,
-      newConfig
+      newConfig,
+      { encoding: "utf-8" }
     );
 
     return true;
