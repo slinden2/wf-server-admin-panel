@@ -20,6 +20,14 @@ const columns: ServerColumn[] = [
     name: "PID",
     selector: "pid",
   },
+  {
+    name: "Players",
+    selector: "playerCount",
+  },
+  {
+    name: "Max players",
+    selector: "maxPlayerCount",
+  },
   // {
   //   name: "Display name",
   //   selector: "displayName",

@@ -3,6 +3,8 @@ export interface ServerRow {
   name: string;
   pid: number;
   // displayName: string;
+  playerCount: number;
+  maxPlayerCount: number;
   start: React.ReactNode;
   stop: React.ReactNode;
   getLog: React.ReactNode;

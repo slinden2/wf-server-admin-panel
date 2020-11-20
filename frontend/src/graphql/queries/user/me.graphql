@@ -11,6 +11,8 @@ query Me {
       name
       pid
       displayName
+      playerCount
+      maxPlayerCount
     }
   }
 }

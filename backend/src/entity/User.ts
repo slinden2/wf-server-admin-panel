@@ -61,16 +61,20 @@ export class User extends BaseEntity {
       },
     });
 
-    const servers: Server[] = serverUsers.map((su) => {
-      const newServer = new Server();
-      newServer.id = su.server.id;
-      newServer.createdDate = su.server.createdDate;
-      newServer.updatedDate = su.server.updatedDate;
-      newServer.displayName = su.server.displayName;
-      newServer.name = su.server.name;
-      newServer.pid = su.server.pid;
-      return newServer;
-    });
+    const servers: Server[] = serverUsers
+      .map((su) => {
+        const newServer = new Server();
+        newServer.id = su.server.id;
+        newServer.createdDate = su.server.createdDate;
+        newServer.updatedDate = su.server.updatedDate;
+        newServer.displayName = su.server.displayName;
+        newServer.name = su.server.name;
+        newServer.pid = su.server.pid;
+        newServer.playerCount = su.server.playerCount;
+        newServer.maxPlayerCount = su.server.maxPlayerCount;
+        return newServer;
+      })
+      .sort((a, b) => (b.name < a.name ? 1 : -1));
 
     return servers;
   }

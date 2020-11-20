@@ -13,6 +13,8 @@ query GetUsers {
       name
       pid
       displayName
+      playerCount
+      maxPlayerCount
     }
   }
 }

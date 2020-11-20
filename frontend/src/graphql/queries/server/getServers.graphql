@@ -6,5 +6,7 @@ query GetServers {
     name
     pid
     displayName
+    playerCount
+    maxPlayerCount
   }
 }
