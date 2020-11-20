@@ -15,20 +15,23 @@ import config from "./config";
 import { useAuthContext } from "./context/AuthContext";
 
 const App = () => {
-  const { logoutUser, isAdmin } = useAuthContext();
+  const { logoutUser, isAdmin, token } = useAuthContext();
 
   return (
     <Router>
       <header>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/">Servers</NavLink>
         {isAdmin && <NavLink to="/users">Users</NavLink>}
-        <a href={config.discordAuthUrl}>Login</a>
-        <span onClick={() => logoutUser()}>Logout</span>
+        {token ? (
+          <span onClick={() => logoutUser()}>Logout</span>
+        ) : (
+          <a href={config.discordAuthUrl}>Login</a>
+        )}
       </header>
       <Switch>
         <Route exact path="/">
           {isAdmin && <AdminCommands />}
-          <ServerList />
+          {token ? <ServerList /> : <div>Login required</div>}
         </Route>
         <Route exact path="/auth">
           <Auth />
