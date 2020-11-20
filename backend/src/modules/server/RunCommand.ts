@@ -1,4 +1,5 @@
 import { Resolver, UseMiddleware, Mutation, Arg } from "type-graphql";
+import Shell from "node-powershell";
 
 import { Server } from "../../entity/Server";
 import { isAuth } from "../../middleware/isAuth";
@@ -29,34 +30,42 @@ export class RunCommandResolver {
       }
     }
 
+    const ps = new Shell({ executionPolicy: "Bypass", noProfile: true });
+
     switch (data.type) {
       case Command.START:
-        console.log(
+        ps.addCommand(
           `C:\\Windows\\System32\\schtasks.exe /run /tn "${server?.name} Start"`
         );
+        await ps.invoke();
         break;
       case Command.STOP:
-        console.log(
+        ps.addCommand(
           `C:\\Windows\\System32\\schtasks.exe /run /tn "${server?.name} Stop"`
         );
+        await ps.invoke();
         break;
       case Command.COMMAND:
-        console.log(
+        ps.addCommand(
           `autohotkeyu64 D:\\OneDrive\\WFShare\\ahk\\wfap_send_command.ahk "${data.command}" ${server?.pid}`
         );
+        await ps.invoke();
         break;
       case Command.REBOOT:
-        console.log('C:\\Windows\\System32\\schtasks.exe /run /tn "Reboot"');
+        ps.addCommand('C:\\Windows\\System32\\schtasks.exe /run /tn "Reboot"');
+        await ps.invoke();
         break;
       case Command.UPDATE_MODS:
-        console.log(
+        ps.addCommand(
           'C:\\Windows\\System32\\schtasks.exe /run /tn "Mod Update"'
         );
+        await ps.invoke();
         break;
       case Command.UPDATE_WF_SERVER:
-        console.log(
+        ps.addCommand(
           'C:\\Windows\\System32\\schtasks.exe /run /tn "Update WF Server"'
         );
+        await ps.invoke();
         break;
       default:
         return false;
