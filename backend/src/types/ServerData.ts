@@ -1,4 +1,4 @@
 export interface ServerData {
-  fileName: string;
+  name: string;
   pid: number;
 }

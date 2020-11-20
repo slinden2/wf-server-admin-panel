@@ -37,6 +37,14 @@ export class Server extends BaseEntity {
   @Column("text", { nullable: true })
   displayName: string;
 
+  @Field()
+  @Column("int")
+  playerCount: number;
+
+  @Field()
+  @Column("int")
+  maxPlayerCount: number;
+
   @OneToMany(() => ServerUser, (su) => su.server)
   userConnection: ServerUser[];
 }
