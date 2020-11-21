@@ -15,6 +15,7 @@ query GetUsers {
       displayName
       playerCount
       maxPlayerCount
+      startedDate
     }
   }
 }

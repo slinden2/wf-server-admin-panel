@@ -99,6 +99,7 @@ export const updateServers = async () => {
       newServer.pid = server.pid;
       newServer.playerCount = server.count;
       newServer.maxPlayerCount = server.maxCount;
+      newServer.startedDate = new Date();
       return newServer;
     });
 
@@ -122,9 +123,12 @@ export const updateServers = async () => {
       serverInDb.playerCount !== curServer.count ||
       serverInDb.maxPlayerCount !== curServer.maxCount
     ) {
+      if (serverInDb.pid !== curServer.pid) {
+        serverInDb.startedDate = new Date();
+      }
       serverInDb.pid = curServer.pid;
-      (serverInDb.playerCount = curServer.count),
-        (serverInDb.maxPlayerCount = curServer.maxCount);
+      serverInDb.playerCount = curServer.count;
+      serverInDb.maxPlayerCount = curServer.maxCount;
       serversToUpdate.push(serverInDb.save());
     }
   }

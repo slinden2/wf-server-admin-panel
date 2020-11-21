@@ -37,38 +37,39 @@ export class RunCommandResolver {
         ps.addCommand(
           `C:\\Windows\\System32\\schtasks.exe /run /tn "${server?.name} Start"`
         );
-        await ps.invoke();
         break;
       case Command.STOP:
         ps.addCommand(
           `C:\\Windows\\System32\\schtasks.exe /run /tn "${server?.name} Stop"`
         );
-        await ps.invoke();
         break;
       case Command.COMMAND:
         ps.addCommand(
           `autohotkeyu64 D:\\OneDrive\\WFShare\\ahk\\wfap_send_command.ahk "${data.command}" ${server?.pid}`
         );
-        await ps.invoke();
         break;
       case Command.REBOOT:
         ps.addCommand('C:\\Windows\\System32\\schtasks.exe /run /tn "Reboot"');
-        await ps.invoke();
         break;
       case Command.UPDATE_MODS:
         ps.addCommand(
           'C:\\Windows\\System32\\schtasks.exe /run /tn "Mod Update"'
         );
-        await ps.invoke();
         break;
       case Command.UPDATE_WF_SERVER:
         ps.addCommand(
           'C:\\Windows\\System32\\schtasks.exe /run /tn "Update WF Server"'
         );
-        await ps.invoke();
         break;
       default:
         return false;
+    }
+
+    try {
+      await ps.invoke();
+    } catch (err) {
+      console.error(err);
+      return false;
     }
 
     return true;

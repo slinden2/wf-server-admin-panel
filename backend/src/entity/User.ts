@@ -72,6 +72,7 @@ export class User extends BaseEntity {
         newServer.pid = su.server.pid;
         newServer.playerCount = su.server.playerCount;
         newServer.maxPlayerCount = su.server.maxPlayerCount;
+        newServer.startedDate = su.server.startedDate;
         return newServer;
       })
       .sort((a, b) => (b.name < a.name ? 1 : -1));

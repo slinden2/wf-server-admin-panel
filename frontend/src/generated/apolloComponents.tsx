@@ -56,6 +56,7 @@ export type Server = {
   displayName?: Maybe<Scalars['String']>;
   playerCount: Scalars['Float'];
   maxPlayerCount: Scalars['Float'];
+  startedDate: Scalars['DateTime'];
 };
 
 export type Mutation = {
@@ -223,7 +224,7 @@ export type GetServersQuery = (
   { __typename?: 'Query' }
   & { getServers?: Maybe<Array<(
     { __typename?: 'Server' }
-    & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount'>
+    & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount' | 'startedDate'>
   )>> }
 );
 
@@ -237,7 +238,7 @@ export type GetUsersQuery = (
     & Pick<User, 'id' | 'createdDate' | 'updatedDate' | 'discordId' | 'username' | 'role'>
     & { servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount'>
+      & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount' | 'startedDate'>
     )> }
   )>> }
 );
@@ -252,7 +253,7 @@ export type MeQuery = (
     & Pick<User, 'id' | 'discordId' | 'username' | 'role'>
     & { servers: Array<(
       { __typename?: 'Server' }
-      & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount'>
+      & Pick<Server, 'id' | 'createdDate' | 'updatedDate' | 'name' | 'pid' | 'displayName' | 'playerCount' | 'maxPlayerCount' | 'startedDate'>
     )> }
   )> }
 );
@@ -501,6 +502,7 @@ export const GetServersDocument = gql`
     displayName
     playerCount
     maxPlayerCount
+    startedDate
   }
 }
     `;
@@ -547,6 +549,7 @@ export const GetUsersDocument = gql`
       displayName
       playerCount
       maxPlayerCount
+      startedDate
     }
   }
 }
@@ -592,6 +595,7 @@ export const MeDocument = gql`
       displayName
       playerCount
       maxPlayerCount
+      startedDate
     }
   }
 }

@@ -26,11 +26,11 @@ export class Server extends BaseEntity {
   updatedDate: Date;
 
   @Field()
-  @Column({ type: "varchar", unique: true, update: false })
+  @Column({ unique: true, update: false })
   name: string;
 
   @Field()
-  @Column("integer")
+  @Column()
   pid: number;
 
   @Field({ nullable: true })
@@ -38,12 +38,16 @@ export class Server extends BaseEntity {
   displayName: string;
 
   @Field()
-  @Column("int")
+  @Column()
   playerCount: number;
 
   @Field()
-  @Column("int")
+  @Column()
   maxPlayerCount: number;
+
+  @Field()
+  @Column()
+  startedDate: Date;
 
   @OneToMany(() => ServerUser, (su) => su.server)
   userConnection: ServerUser[];
