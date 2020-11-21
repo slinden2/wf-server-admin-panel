@@ -1,24 +1,17 @@
+import { LazyQueryResult, QueryLazyOptions } from "@apollo/client";
 import React from "react";
-import { useGetLogLazyQuery } from "../../generated/apolloComponents";
+import {
+  Exact,
+  GetLogQuery,
+  QueryGetLogArgs,
+  useGetLogLazyQuery,
+} from "../../generated/apolloComponents";
 
 interface Props {
-  serverId: string | undefined;
+  getLogResult: LazyQueryResult<GetLogQuery, QueryGetLogArgs>;
 }
 
-const LogPane: React.FC<Props> = ({ serverId }) => {
-  const [getLog, getLogResult] = useGetLogLazyQuery({
-    fetchPolicy: "no-cache",
-  });
-
-  React.useEffect(() => {
-    const callGetLog = async () => {
-      if (serverId) {
-        await getLog({ variables: { serverId } });
-      }
-    };
-    callGetLog();
-  }, [serverId, getLog]);
-
+const LogPane: React.FC<Props> = ({ getLogResult }) => {
   const logString = getLogResult.data?.getLog;
 
   return (

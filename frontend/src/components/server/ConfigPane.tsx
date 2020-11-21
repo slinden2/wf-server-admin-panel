@@ -6,7 +6,9 @@ import {
 
 interface Props {
   serverId: string | undefined;
-  setShowPane: React.Dispatch<React.SetStateAction<"LOG" | "CONFIG" | null>>;
+  setShowPane: React.Dispatch<
+    React.SetStateAction<["LOG" | "CONFIG" | null, string | null]>
+  >;
 }
 
 const ConfigPane: React.FC<Props> = ({ serverId, setShowPane }) => {
@@ -47,7 +49,7 @@ const ConfigPane: React.FC<Props> = ({ serverId, setShowPane }) => {
     <div>
       <textarea defaultValue={configString} ref={configRef} />
       <button onClick={() => handleSave()}>Save</button>
-      <button onClick={() => setShowPane(null)}>Close</button>
+      <button onClick={() => setShowPane([null, null])}>Close</button>
     </div>
   );
 };

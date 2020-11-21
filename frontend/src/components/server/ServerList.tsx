@@ -3,6 +3,7 @@ import React from "react";
 import { useAuthContext } from "../../context/AuthContext";
 import {
   Command,
+  useGetLogLazyQuery,
   useRunCommandMutation,
 } from "../../generated/apolloComponents";
 import { ServerColumn } from "../../types/ServerColumn";
@@ -55,14 +56,18 @@ const columns: ServerColumn[] = [
 ];
 
 const ServerList: React.FC = () => {
+  const [getLog, getLogResult] = useGetLogLazyQuery({
+    fetchPolicy: "no-cache",
+  });
   const { user } = useAuthContext();
   const [runCommand] = useRunCommandMutation();
+  const [configSrvId, setConfigSrvId] = React.useState<string>("");
+  const [showPane, setShowPane] = React.useState<
+    ["LOG" | "CONFIG" | null, string | null]
+  >([null, null]);
   const elementsRef = React.useRef(
     Array.from({ length: 20 }).map(() => React.createRef<HTMLInputElement>())
   );
-  const [logSrvId, setLogSrvId] = React.useState<string>("");
-  const [configSrvId, setConfigSrvId] = React.useState<string>("");
-  const [showPane, setShowPane] = React.useState<"LOG" | "CONFIG" | null>(null);
 
   if (user.loading) {
     return <div>Loading...</div>;
@@ -85,12 +90,12 @@ const ServerList: React.FC = () => {
         await runCommand({ variables: { serverId, type: Command.Stop } });
         break;
       case "GET_LOG":
-        setLogSrvId(serverId);
-        setShowPane("LOG");
+        setShowPane(["LOG", serverId]);
+        await getLog({ variables: { serverId } });
         break;
       case "GET_CONFIG":
         setConfigSrvId(serverId);
-        setShowPane("CONFIG");
+        setShowPane(["CONFIG", serverId]);
         break;
       default:
         return;
@@ -120,6 +125,7 @@ const ServerList: React.FC = () => {
 
   const tableData: ServerRow[] = user.data.me.servers.map((srv, index) => {
     const curRef = elementsRef.current[index];
+    const logOpen = showPane[0] === "LOG" && showPane[1] === srv.id;
 
     return {
       ...srv,
@@ -141,7 +147,7 @@ const ServerList: React.FC = () => {
         <button
           onClick={(event) => handleButtonClick(event, "GET_LOG", srv.id)}
         >
-          Get log
+          {logOpen ? "Reload log" : "Get log"}
         </button>
       ),
       getConfig: (
@@ -165,8 +171,8 @@ const ServerList: React.FC = () => {
     <div>
       <h2>My Servers</h2>
       <ServerTable data={tableData} columns={columns} />
-      {showPane === "LOG" && <LogPane serverId={logSrvId} />}
-      {showPane === "CONFIG" && (
+      {showPane[0] === "LOG" && <LogPane getLogResult={getLogResult} />}
+      {showPane[0] === "CONFIG" && (
         <ConfigPane serverId={configSrvId} setShowPane={setShowPane} />
       )}
     </div>
