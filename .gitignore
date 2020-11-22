@@ -46,3 +46,6 @@ jspm_packages/
 
 # production build
 dist/
+
+# tailwind
+tailwind.output.css

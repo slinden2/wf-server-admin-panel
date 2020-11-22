@@ -4,8 +4,8 @@ import { ApolloProvider } from "@apollo/client";
 
 import apolloClient from "./apolloClient";
 import App from "./App";
-import "./index.css";
 import { AuthProvider } from "./context/AuthContext";
+import "./tailwind.output.css";
 
 ReactDOM.render(
   <React.StrictMode>
