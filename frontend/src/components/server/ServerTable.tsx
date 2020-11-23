@@ -9,11 +9,16 @@ interface Props {
 
 const ServerTable: React.FC<Props> = ({ columns, data }) => {
   return (
-    <table>
+    <table className="border-collapse">
       <thead>
         <tr>
           {columns.map((col) => (
-            <th key={col.selector}>{col.name}</th>
+            <th
+              key={col.selector}
+              className="py-4 px-2 text-left border-t bg-blue-100"
+            >
+              {col.name}
+            </th>
           ))}
         </tr>
       </thead>
@@ -21,7 +26,14 @@ const ServerTable: React.FC<Props> = ({ columns, data }) => {
         {data.map((row) => (
           <tr key={row.id}>
             {columns.map((col) => {
-              return <td key={col.selector}>{row[col.selector]}</td>;
+              return (
+                <td
+                  key={col.selector}
+                  className="py-4 px-2 text-center border-t"
+                >
+                  {row[col.selector]}
+                </td>
+              );
             })}
           </tr>
         ))}

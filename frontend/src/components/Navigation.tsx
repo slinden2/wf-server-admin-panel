@@ -10,7 +10,7 @@ const Navigation = () => {
   const activeNavlink = "bg-blue-900";
 
   return (
-    <nav className="border-t">
+    <nav>
       <ul className="my-3">
         <li className={liStyles}>
           <NavLink
