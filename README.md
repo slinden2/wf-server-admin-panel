@@ -3,7 +3,8 @@
 ## Config Environment Variables
 
 - NODE_ENV - development in dev env and production in prod env
-- WFAP_PORT - Port number for the web server
+- WFAP_HTTP_PORT - Port number for the http web server
+- WFAP_HTTPS_PORT - Port number for the https web server
 - WFAP_DISCORD_CLIENT_ID - From Discord dev portal
 - WFAP_DISCORD_CLIENT_SECRET - From Discord dev portal
 - WFAP_DISCORD_REDIRECT_URI - From Discord dev portal

@@ -1,8 +1,10 @@
 import { ConnectionOptions } from "typeorm";
 import { isEnvironment } from "./utils/typeGuards";
+import fs from "fs";
 
 const _env = process.env.NODE_ENV;
-const _port = process.env.WFAP_PORT;
+const _httpPort = process.env.WFAP_HTTP_PORT;
+const _httpsPort = process.env.WFAP_HTTPS_PORT;
 const _discordClientId = process.env.WFAP_DISCORD_CLIENT_ID;
 const _discordClientSecret = process.env.WFAP_DISCORD_CLIENT_SECRET;
 const _discordRedirectUri = process.env.WFAP_DISCORD_REDIRECT_URI;
@@ -12,6 +14,10 @@ const _pidPath = process.env.WFAP_PID_PATH;
 
 if (!isEnvironment(_env)) {
   throw new Error("NODE_ENV must be either 'development' or 'production'");
+}
+
+if (!_httpPort || !_httpsPort) {
+  throw new Error("WFAP_HTTP_PORT or WFAP_HTTPS_PORT is missing");
 }
 
 if (
@@ -34,7 +40,6 @@ if (!_pidPath) {
 }
 
 const env = _env;
-const port = Number(_port) || 4000;
 const discordClientId = _discordClientId;
 const discordClientSecret = _discordClientSecret;
 const discordRedirectUri = _discordRedirectUri;
@@ -52,9 +57,16 @@ const connParams: ConnectionOptions = {
   logging: env === "development" ? true : false,
 };
 
+const certOptions =
+  env === "production"
+    ? {
+        key: fs.readFileSync("c:\\certs\\private.key"),
+        cert: fs.readFileSync("c:\\certs\\certificate.crt"),
+      }
+    : {};
+
 export default {
   env,
-  port,
   sqlite: {
     connParams,
   },
@@ -68,6 +80,9 @@ export default {
     jwtSecret,
   },
   servers: {
+    httpPort: _httpPort,
+    httpsPort: _httpsPort,
+    certOptions,
     pidPath,
   },
   token: {

@@ -1,4 +1,6 @@
 import "reflect-metadata";
+import http from "http";
+import https from "https";
 import { ApolloServer } from "apollo-server-express";
 import { createConnection } from "typeorm";
 import express from "express";
@@ -40,12 +42,13 @@ const main = async () => {
     });
   }
 
-  const port = config.port;
+  const httpServer = http.createServer(app);
+  const httpsServer = https.createServer(config.servers.certOptions, app);
 
-  app.listen({ port }, () => {
+  httpServer.listen(config.servers.httpPort, () => {
     // eslint-disable-next-line no-console
     console.log(
-      `Server ready at http://localhost:${port}${apolloServer.graphqlPath}`
+      `HTTP server ready at http://localhost:${config.servers.httpPort}${apolloServer.graphqlPath}`
     );
 
     updateServers();
@@ -53,6 +56,13 @@ const main = async () => {
     setInterval(() => {
       updateServers();
     }, 60000);
+  });
+
+  httpsServer.listen(config.servers.httpsPort, () => {
+    // eslint-disable-next-line no-console
+    console.log(
+      `HTTPS server ready at https://localhost:${config.servers.httpsPort}${apolloServer.graphqlPath}`
+    );
   });
 };
 
