@@ -24,7 +24,7 @@ const LogPane: React.FC<Props> = ({ getLogResult }) => {
       <h3 className="text-2xl mb-4">Log</h3>
       <div
         ref={elRef}
-        className="overflow-y-scroll h-64 border bg-gray-100 px-2"
+        className="overflow-y-scroll h-64 border bg-gray-100 px-2 w-11/12"
         dangerouslySetInnerHTML={{ __html: logString ? logString : "" }}
       />
     </div>

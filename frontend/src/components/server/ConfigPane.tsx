@@ -3,6 +3,7 @@ import {
   useGetConfigLazyQuery,
   useSaveConfigMutation,
 } from "../../generated/apolloComponents";
+import { buttonStyles } from "../../styles/buttonStyles";
 
 interface Props {
   serverId: string | undefined;
@@ -47,9 +48,23 @@ const ConfigPane: React.FC<Props> = ({ serverId, setShowPane }) => {
 
   return (
     <div>
-      <textarea defaultValue={configString} ref={configRef} />
-      <button onClick={() => handleSave()}>Save</button>
-      <button onClick={() => setShowPane([null, null])}>Close</button>
+      <h3 className="text-2xl mb-4">Config</h3>
+      <textarea
+        className="w-11/12 text-xs font-mono h-64 border bg-gray-100 px-2"
+        defaultValue={configString}
+        ref={configRef}
+      />
+      <div>
+        <button className={buttonStyles} onClick={() => handleSave()}>
+          Save
+        </button>
+        <button
+          className={`${buttonStyles} ml-3`}
+          onClick={() => setShowPane([null, null])}
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 };

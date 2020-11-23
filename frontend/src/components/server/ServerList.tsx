@@ -164,6 +164,7 @@ const ServerList: React.FC = () => {
       ),
       sendCommand: (
         <input
+          className="border rounded p-2 text-sm font-mono"
           ref={curRef}
           type="text"
           onKeyDown={(event) => handleSendCommand(event, srv.id, index)}

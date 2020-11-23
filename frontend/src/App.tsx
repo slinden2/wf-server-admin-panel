@@ -36,7 +36,7 @@ const App = () => {
             {isAdmin && (
               <Route exact path="/users">
                 <h2 className="text-3xl font-medium py-5 px-5">Users</h2>
-                <div className="px-5 py-3">
+                <div className="px-5 py-3 border-t">
                   <UserList />
                 </div>
               </Route>

@@ -5,6 +5,7 @@ import {
   User,
   useSetUserServersMutation,
 } from "../../generated/apolloComponents";
+import { buttonStyles } from "../../styles/buttonStyles";
 
 interface Props {
   servers: ({
@@ -46,8 +47,8 @@ const UserServers: React.FC<Props> = ({ servers, user }) => {
     const isChecked = !!user.servers.find((usrv) => usrv.id === srv.id);
 
     return (
-      <div key={srv.id}>
-        <label>{srv.name}</label>
+      <div key={srv.id} className="flex mr-4 my-2 items-center">
+        <label className="mr-2">{srv.name}</label>
         <input
           ref={curRef}
           type="checkbox"
@@ -60,9 +61,14 @@ const UserServers: React.FC<Props> = ({ servers, user }) => {
 
   return (
     <div>
-      {serverData}
+      <div className="flex">{serverData}</div>
       {user.role !== "ADMIN" && (
-        <button onClick={() => handleSaveServers()}>Save</button>
+        <button
+          className={`${buttonStyles} block my-4`}
+          onClick={() => handleSaveServers()}
+        >
+          Save
+        </button>
       )}
     </div>
   );

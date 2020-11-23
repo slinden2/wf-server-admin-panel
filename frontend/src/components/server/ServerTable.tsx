@@ -13,7 +13,7 @@ const ServerTable: React.FC<Props> = ({ columns, data }) => {
       <thead>
         <tr>
           {columns.map((col) => (
-            <th key={col.selector} className="py-4 px-2 border-t bg-blue-100">
+            <th key={col.selector} className="py-4 px-2 border-t bg-gray-100">
               {col.name}
             </th>
           ))}

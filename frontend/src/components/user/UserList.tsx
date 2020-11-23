@@ -37,10 +37,11 @@ const UserList: React.FC = () => {
   return (
     <div>
       <ul>
-        {userList.map((user) => (
+        {userList.map((user, i) => (
           <li key={user.id}>
-            <div>
-              <span>{user.username}</span>
+            <div className="mt-4">
+              <span>{i + 1}.</span>
+              <span className="font-semibold mx-3">{user.username}</span>
               <span>{user.role}</span>
             </div>
             <div>{user.servers}</div>
