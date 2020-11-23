@@ -92,7 +92,7 @@ const ServerList: React.FC = () => {
         break;
       case "GET_LOG":
         setShowPane(["LOG", serverId]);
-        await getLog({ variables: { serverId } });
+        await getLog({ variables: { serverId, numOfRows: 100 } });
         break;
       case "GET_CONFIG":
         setConfigSrvId(serverId);
