@@ -11,6 +11,7 @@ import { ServerRow } from "../../types/ServerRow";
 import LogPane from "./LogPane";
 import ConfigPane from "./ConfigPane";
 import ServerTable from "./ServerTable";
+import { buttonStyles } from "../../styles/buttonStyles";
 
 const columns: ServerColumn[] = [
   {
@@ -91,7 +92,7 @@ const ServerList: React.FC = () => {
         break;
       case "GET_LOG":
         setShowPane(["LOG", serverId]);
-        await getLog({ variables: { serverId } });
+        await getLog({ variables: { serverId, numOfRows: 100 } });
         break;
       case "GET_CONFIG":
         setConfigSrvId(serverId);
@@ -131,6 +132,7 @@ const ServerList: React.FC = () => {
       ...srv,
       start: (
         <button
+          className={buttonStyles}
           onClick={(event) => handleButtonClick(event, Command.Start, srv.id)}
         >
           Start
@@ -138,6 +140,7 @@ const ServerList: React.FC = () => {
       ),
       stop: (
         <button
+          className={buttonStyles}
           onClick={(event) => handleButtonClick(event, Command.Stop, srv.id)}
         >
           Stop
@@ -145,6 +148,7 @@ const ServerList: React.FC = () => {
       ),
       getLog: (
         <button
+          className={buttonStyles}
           onClick={(event) => handleButtonClick(event, "GET_LOG", srv.id)}
         >
           {logOpen ? "Reload log" : "Get log"}
@@ -152,6 +156,7 @@ const ServerList: React.FC = () => {
       ),
       getConfig: (
         <button
+          className={buttonStyles}
           onClick={(event) => handleButtonClick(event, "GET_CONFIG", srv.id)}
         >
           Get config
@@ -159,6 +164,7 @@ const ServerList: React.FC = () => {
       ),
       sendCommand: (
         <input
+          className="border rounded p-2 text-sm font-mono"
           ref={curRef}
           type="text"
           onKeyDown={(event) => handleSendCommand(event, srv.id, index)}
@@ -168,8 +174,8 @@ const ServerList: React.FC = () => {
   });
 
   return (
-    <div>
-      <h2>My Servers</h2>
+    <div className="my-5">
+      <h3 className="text-2xl mb-4">My Servers</h3>
       <ServerTable data={tableData} columns={columns} />
       {showPane[0] === "LOG" && <LogPane getLogResult={getLogResult} />}
       {showPane[0] === "CONFIG" && (
