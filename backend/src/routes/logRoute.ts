@@ -10,7 +10,7 @@ router.get("/:serverId", async (req, res) => {
   if (!server) {
     return res.status(404).json({ message: "File not found" });
   }
-  const file = `${config.servers.pidPath}/${server.name}.cfg`;
+  const file = `${config.servers.pidPath}/${server.name}.log`;
   try {
     return await res.download(file);
   } catch (err) {

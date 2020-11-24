@@ -12,7 +12,7 @@ import LogPane from "./LogPane";
 import ConfigPane from "./ConfigPane";
 import ServerTable from "./ServerTable";
 import { buttonStyles } from "../../styles/buttonStyles";
-import { downloadConfig } from "./serverList/downloadConfig";
+import { downloadLog } from "./serverList/downloadLog";
 
 const columns: ServerColumn[] = [
   {
@@ -49,11 +49,11 @@ const columns: ServerColumn[] = [
   },
   {
     name: "",
-    selector: "getConfig",
+    selector: "downloadLog",
   },
   {
     name: "",
-    selector: "downloadConfig",
+    selector: "getConfig",
   },
   {
     name: "Send command",
@@ -90,7 +90,7 @@ const ServerList: React.FC = () => {
       | Command.Stop
       | "GET_LOG"
       | "GET_CONFIG"
-      | "DOWNLOAD_CONFIG",
+      | "DOWNLOAD_LOG",
     serverId: string
   ) => {
     switch (command) {
@@ -108,14 +108,14 @@ const ServerList: React.FC = () => {
         setConfigSrvId(serverId);
         setShowPane(["CONFIG", serverId]);
         break;
-      case "DOWNLOAD_CONFIG":
+      case "DOWNLOAD_LOG":
         let serverName = user.data?.me?.servers.find(
           (srv) => srv.id === serverId
         )?.name;
         if (!serverName) {
-          serverName = "server-config";
+          serverName = "server-log";
         }
-        downloadConfig(serverId, serverName);
+        downloadLog(serverId, serverName);
         break;
       default:
         return;
@@ -173,22 +173,20 @@ const ServerList: React.FC = () => {
           {logOpen ? "Reload log" : "Get log"}
         </button>
       ),
+      downloadLog: (
+        <button
+          className={buttonStyles}
+          onClick={(event) => handleButtonClick(event, "DOWNLOAD_LOG", srv.id)}
+        >
+          DL log
+        </button>
+      ),
       getConfig: (
         <button
           className={buttonStyles}
           onClick={(event) => handleButtonClick(event, "GET_CONFIG", srv.id)}
         >
           View config
-        </button>
-      ),
-      downloadConfig: (
-        <button
-          className={buttonStyles}
-          onClick={(event) =>
-            handleButtonClick(event, "DOWNLOAD_CONFIG", srv.id)
-          }
-        >
-          DL config
         </button>
       ),
       sendCommand: (
