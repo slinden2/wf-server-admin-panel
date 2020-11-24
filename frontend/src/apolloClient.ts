@@ -15,7 +15,10 @@ const onErrorLink = onError(({ graphQLErrors, networkError }) => {
     for (const err of graphQLErrors) {
       // Remove expired or invalid tokens from localStorage
       if (err.extensions?.code === "UNAUTHENTICATED") {
-        localStorage.removeItem("token");
+        if (localStorage.getItem("token")) {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }
       }
     }
   }

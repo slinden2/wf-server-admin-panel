@@ -10,6 +10,7 @@ import path from "path";
 import config from "./config";
 import { createSchema } from "./utils/createSchema";
 import { updateServers } from "./jobs/updateServers";
+import configRoute from "./routes/configRoute";
 
 console.log("config", config);
 
@@ -30,6 +31,8 @@ const main = async () => {
   app.use(cors());
 
   apolloServer.applyMiddleware({ app, cors: false });
+
+  app.use("/api/config/", configRoute);
 
   if (config.env === "production") {
     app.use(express.static(path.join(__dirname, "client")));

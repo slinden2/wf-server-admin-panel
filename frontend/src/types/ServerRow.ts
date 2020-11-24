@@ -9,5 +9,6 @@ export interface ServerRow {
   stop: React.ReactNode;
   getLog: React.ReactNode;
   getConfig: React.ReactNode;
+  downloadConfig: React.ReactNode;
   sendCommand: React.ReactNode;
 }

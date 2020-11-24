@@ -12,6 +12,7 @@ import LogPane from "./LogPane";
 import ConfigPane from "./ConfigPane";
 import ServerTable from "./ServerTable";
 import { buttonStyles } from "../../styles/buttonStyles";
+import { downloadConfig } from "./serverList/downloadConfig";
 
 const columns: ServerColumn[] = [
   {
@@ -51,6 +52,10 @@ const columns: ServerColumn[] = [
     selector: "getConfig",
   },
   {
+    name: "",
+    selector: "downloadConfig",
+  },
+  {
     name: "Send command",
     selector: "sendCommand",
   },
@@ -80,7 +85,12 @@ const ServerList: React.FC = () => {
 
   const handleButtonClick = async (
     _event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    command: Command.Start | Command.Stop | "GET_LOG" | "GET_CONFIG",
+    command:
+      | Command.Start
+      | Command.Stop
+      | "GET_LOG"
+      | "GET_CONFIG"
+      | "DOWNLOAD_CONFIG",
     serverId: string
   ) => {
     switch (command) {
@@ -97,6 +107,15 @@ const ServerList: React.FC = () => {
       case "GET_CONFIG":
         setConfigSrvId(serverId);
         setShowPane(["CONFIG", serverId]);
+        break;
+      case "DOWNLOAD_CONFIG":
+        let serverName = user.data?.me?.servers.find(
+          (srv) => srv.id === serverId
+        )?.name;
+        if (!serverName) {
+          serverName = "server-config";
+        }
+        downloadConfig(serverId, serverName);
         break;
       default:
         return;
@@ -159,7 +178,17 @@ const ServerList: React.FC = () => {
           className={buttonStyles}
           onClick={(event) => handleButtonClick(event, "GET_CONFIG", srv.id)}
         >
-          Get config
+          View config
+        </button>
+      ),
+      downloadConfig: (
+        <button
+          className={buttonStyles}
+          onClick={(event) =>
+            handleButtonClick(event, "DOWNLOAD_CONFIG", srv.id)
+          }
+        >
+          DL config
         </button>
       ),
       sendCommand: (

@@ -16,7 +16,18 @@ const App = () => {
       <Router>
         <div className="w-56 bg-blue-800 text-white">
           <div className="py-3 px-5">
-            <div className="text-4xl">WFAP</div>
+            <div>
+              <span className="text-4xl mr-3">WFAP</span>
+              <span className="text-xs">
+                &copy;{" "}
+                <a
+                  className="hover:underline"
+                  href="https://discordapp.com/users/472514364348432384"
+                >
+                  looni
+                </a>
+              </span>
+            </div>
             <small>Wreckfest Server Admin Panel</small>
           </div>
           <Navigation />
