@@ -11,6 +11,8 @@
 - WFAP_JWT_SECRET - Secret string used for JWT auth tokens
 - WFAP_ADMIN_DISCORD_ID - Admin users Discord ID
 - WFAP_PID_PATH - Path to Wreckfest related files (ie C:\\Wreckfest in production)
+- WFAP_STEAM_API_KEY - Needed for updating player count.
+- WFAP_DOMAIN - Domain of the server where the WF servers are running
 
 ## How to start the production build?
 

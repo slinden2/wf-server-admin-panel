@@ -11,6 +11,8 @@ const _discordRedirectUri = process.env.WFAP_DISCORD_REDIRECT_URI;
 const _adminDiscordId = process.env.WFAP_ADMIN_DISCORD_ID;
 const _jwtSecret = process.env.WFAP_JWT_SECRET;
 const _pidPath = process.env.WFAP_PID_PATH;
+const _labbeDomain = process.env.WFAP_DOMAIN;
+const _steamApiKey = process.env.WFAP_STEAM_API_KEY;
 
 if (!isEnvironment(_env)) {
   throw new Error("NODE_ENV must be either 'development' or 'production'");
@@ -39,6 +41,14 @@ if (!_pidPath) {
   throw new Error("WFAP_PID_PATH not provided");
 }
 
+if (!_steamApiKey) {
+  throw new Error("WFAP_STEAM_API_KEY not provided");
+}
+
+if (!_labbeDomain) {
+  throw new Error("WFAP_DOMAIN not provided");
+}
+
 const env = _env;
 const discordClientId = _discordClientId;
 const discordClientSecret = _discordClientSecret;
@@ -46,6 +56,10 @@ const discordRedirectUri = _discordRedirectUri;
 const adminDiscordId = _adminDiscordId;
 const jwtSecret = _jwtSecret;
 const pidPath = _pidPath;
+const httpPort = _httpPort;
+const httpsPort = _httpsPort;
+const steamApiKey = _steamApiKey;
+const labbeDomain = _labbeDomain;
 const tokenExpirationTime = 15 * 60 * 1000; // fifteen minutes
 const tokenGracePeriod = 3 * 60 * 60 * 1000; // three hours
 
@@ -54,7 +68,7 @@ const connParams: ConnectionOptions = {
   database: env === "production" ? "./db.sqlite" : "./db-dev.sqlite",
   entities: [__dirname + "/entity/*.{ts,js}"],
   synchronize: true,
-  logging: env === "development" ? true : false,
+  logging: env === "development" ? false : false,
 };
 
 const certOptions =
@@ -80,13 +94,18 @@ export default {
     jwtSecret,
   },
   servers: {
-    httpPort: _httpPort,
-    httpsPort: _httpsPort,
+    httpPort,
+    httpsPort,
     certOptions,
     pidPath,
+    domain: labbeDomain,
   },
   token: {
     expirationTime: tokenExpirationTime,
     gracePeriod: tokenGracePeriod,
+  },
+  steam: {
+    apiKey: steamApiKey,
+    serverEndpointUri: `https://api.steampowered.com/IGameServersService/GetServerList/v1/?key=${steamApiKey}&limit=10000&filter=appid\\228380`,
   },
 };

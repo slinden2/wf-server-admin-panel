@@ -5,9 +5,9 @@ import { createConnection, Connection } from "typeorm";
 import { Server } from "../entity/Server";
 import config from "../config";
 import { ServerData } from "../types/ServerData";
-import { getPlayerCount } from "./updateServers/getPlayerCount";
-import { getMaxPlayerCount } from "./updateServers/getMaxPlayerCount";
-import { ServerPlayerCount } from "../types/ServerPlayerCount";
+import { getLabbeServers } from "./updateServers/getLabbeServers";
+import { readFile } from "../utils/readFile";
+import { getConfigProperty } from "./updateServers/getConfigProperty";
 
 let connection: Connection;
 
@@ -18,7 +18,7 @@ export const updateServers = async () => {
 
   const dir = await fs.readdir(config.servers.pidPath);
   const pidFiles = dir.filter((file) => path.extname(file) === ".pid");
-  const playersFiles = dir.filter((file) => path.extname(file) === ".players");
+  const labbeServers = await getLabbeServers();
 
   const currentServers = await Promise.all(
     pidFiles.map(
@@ -35,58 +35,10 @@ export const updateServers = async () => {
     )
   );
 
-  const currentPlayerCounts = await Promise.all(
-    playersFiles.map(
-      async (fileName): Promise<ServerPlayerCount> => {
-        const fileBasename = path.basename(fileName, ".players");
-
-        // Read player file
-        const playerFile = await fs.readFile(
-          `${config.servers.pidPath}/${fileName}`,
-          { encoding: "utf-8" }
-        );
-        // Get player count from player file
-        const playerCount = getPlayerCount(playerFile);
-
-        // Read config file
-        const configFileName = `${fileBasename}.cfg`;
-        const configFile = await fs.readFile(
-          `${config.servers.pidPath}/${configFileName}`,
-          { encoding: "utf-8" }
-        );
-        // Get max_players from config file
-        const maxPlayerCount = getMaxPlayerCount(configFile);
-
-        return {
-          name: fileBasename,
-          count: playerCount,
-          maxCount: maxPlayerCount,
-        };
-      }
-    )
-  );
-
-  const currentServerData: Array<
-    ServerData & ServerPlayerCount
-  > = currentServers.map((csrv) => {
-    const playerCountData = currentPlayerCounts.find((pcount) => {
-      return pcount.name === csrv.name;
-    });
-    if (!playerCountData) {
-      throw new Error(`No .players file found for server: ${csrv.name}`);
-    }
-
-    return {
-      ...csrv,
-      count: playerCountData.count,
-      maxCount: playerCountData.maxCount,
-    };
-  });
-
   const serversInDb = await Server.find();
 
   // Check if there are new servers to add in the pid directory
-  const serversToAdd = currentServerData.filter(
+  const serversToAdd = currentServers.filter(
     (curServer) =>
       !serversInDb.find((dbServer) => dbServer.name === curServer.name)
   );
@@ -94,11 +46,15 @@ export const updateServers = async () => {
   // Add new servers
   if (serversToAdd.length) {
     const newServers = serversToAdd.map((server) => {
+      const confFile = readFile(`${server.name}.cfg`);
+      const gamePort = getConfigProperty("game_port", confFile);
+      const maxPlayersCount = getConfigProperty("max_players", confFile);
       const newServer = new Server();
       newServer.name = server.name;
       newServer.pid = server.pid;
-      newServer.playerCount = server.count;
-      newServer.maxPlayerCount = server.maxCount;
+      newServer.gamePort = Number(gamePort);
+      newServer.playerCount = 0;
+      newServer.maxPlayerCount = Number(maxPlayersCount);
       newServer.startedDate = new Date();
       return newServer;
     });
@@ -109,7 +65,7 @@ export const updateServers = async () => {
   // Check if server PID, player count or max player counts have changed
   // and update them
   const serversToUpdate: Promise<Server>[] = [];
-  for (const curServer of currentServerData) {
+  for (const curServer of currentServers) {
     const serverInDb = serversInDb.find(
       (serverDb) => serverDb.name === curServer.name
     );
@@ -118,17 +74,24 @@ export const updateServers = async () => {
       return;
     }
 
+    const steamServer = labbeServers.find(
+      (lsrv) => lsrv.gamePort === serverInDb.gamePort
+    );
+
+    const confFile = readFile(`${serverInDb.name}.cfg`);
+    const maxPlayerCount = Number(getConfigProperty("max_players", confFile));
+
     if (
       serverInDb.pid !== curServer.pid ||
-      serverInDb.playerCount !== curServer.count ||
-      serverInDb.maxPlayerCount !== curServer.maxCount
+      serverInDb.playerCount !== steamServer?.players ||
+      serverInDb.maxPlayerCount !== maxPlayerCount
     ) {
       if (serverInDb.pid !== curServer.pid) {
         serverInDb.startedDate = new Date();
       }
       serverInDb.pid = curServer.pid;
-      serverInDb.playerCount = curServer.count;
-      serverInDb.maxPlayerCount = curServer.maxCount;
+      serverInDb.playerCount = steamServer?.players || 0;
+      serverInDb.maxPlayerCount = maxPlayerCount;
       serversToUpdate.push(serverInDb.save());
     }
   }

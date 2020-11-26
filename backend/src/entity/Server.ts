@@ -33,6 +33,10 @@ export class Server extends BaseEntity {
   @Column()
   pid: number;
 
+  @Field()
+  @Column()
+  gamePort: number;
+
   @Field({ nullable: true })
   @Column("text", { nullable: true })
   displayName: string;
