@@ -8,6 +8,7 @@ const _httpsPort = process.env.WFAP_HTTPS_PORT;
 const _discordClientId = process.env.WFAP_DISCORD_CLIENT_ID;
 const _discordClientSecret = process.env.WFAP_DISCORD_CLIENT_SECRET;
 const _discordRedirectUri = process.env.WFAP_DISCORD_REDIRECT_URI;
+const _discordWebhookUri = process.env.WFAP_DISCORD_WEBHOOK_URI;
 const _adminDiscordId = process.env.WFAP_ADMIN_DISCORD_ID;
 const _jwtSecret = process.env.WFAP_JWT_SECRET;
 const _pidPath = process.env.WFAP_PID_PATH;
@@ -26,10 +27,11 @@ if (
   !_discordClientId ||
   !_discordClientSecret ||
   !_discordRedirectUri ||
-  !_adminDiscordId
+  !_adminDiscordId ||
+  !_discordWebhookUri
 ) {
   throw new Error(
-    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET, WFAP_DISCORD_REDIRECT_URI or WFAP_ADMIN_DISCORD_ID missing"
+    "WFAP_DISCORD_CLIENT_ID, WFAP_DISCORD_CLIENT_SECRET, WFAP_DISCORD_REDIRECT_URI, WFAP_ADMIN_DISCORD_ID or WFAP_DISCORD_WEBHOOK_URI missing"
   );
 }
 
@@ -54,6 +56,7 @@ const discordClientId = _discordClientId;
 const discordClientSecret = _discordClientSecret;
 const discordRedirectUri = _discordRedirectUri;
 const adminDiscordId = _adminDiscordId;
+const discordWebhookUri = _discordWebhookUri;
 const jwtSecret = _jwtSecret;
 const pidPath = _pidPath;
 const httpPort = _httpPort;
@@ -89,6 +92,7 @@ export default {
     clientSecret: discordClientSecret,
     redirectUri: discordRedirectUri,
     adminId: adminDiscordId,
+    webhookUri: discordWebhookUri,
   },
   auth: {
     jwtSecret,

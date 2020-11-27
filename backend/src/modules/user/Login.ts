@@ -6,6 +6,7 @@ import config from "../../config";
 import { encodeSession } from "../../utils/encodeSession";
 import { PartialSession } from "../../types/PartialSession";
 import { EncodeResult } from "../../types/EncodeResult";
+import { sendMessageWebhook } from "../../webhook/sendMessageWebhook";
 
 @Resolver()
 export class LoginResolver {
@@ -14,9 +15,6 @@ export class LoginResolver {
     const discordUser = await getDiscordUser(code);
 
     let user = await User.findOne({ where: { discordId: discordUser.id } });
-    if (user) {
-      console.log("User found:");
-    }
 
     if (!user) {
       user = await User.create({
@@ -24,10 +22,8 @@ export class LoginResolver {
         username: discordUser.username,
         role: config.discord.adminId === discordUser.id ? "ADMIN" : "USER",
       }).save();
-      console.log("New user created:");
+      await sendMessageWebhook(user.id, user.username);
     }
-
-    console.log(JSON.stringify(user, undefined, 2));
 
     const partialSession: PartialSession = {
       dateCreated: Date.now(),
@@ -37,7 +33,6 @@ export class LoginResolver {
     };
 
     const encodeResult = encodeSession(config.auth.jwtSecret, partialSession);
-    console.log(encodeResult);
 
     return encodeResult;
   }
