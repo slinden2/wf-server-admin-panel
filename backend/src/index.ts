@@ -58,7 +58,7 @@ const main = async () => {
 
     setInterval(() => {
       updateServers();
-    }, 60000);
+    }, 10000);
   });
 
   httpsServer.listen(config.servers.httpsPort, () => {
