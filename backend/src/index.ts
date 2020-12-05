@@ -6,6 +6,7 @@ import { createConnection } from "typeorm";
 import express from "express";
 import cors from "cors";
 import path from "path";
+import cron from "node-cron";
 
 import config from "./config";
 import { createSchema } from "./utils/createSchema";
@@ -13,6 +14,14 @@ import { updateServers } from "./jobs/updateServers";
 import logRoute from "./routes/logRoute";
 
 console.log("config", config);
+
+const updateServersPeriodically = async () => {
+  try {
+    await updateServers();
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 const main = async () => {
   await createConnection(config.sqlite.connParams);
@@ -54,11 +63,9 @@ const main = async () => {
       `HTTP server ready at http://localhost:${config.servers.httpPort}${apolloServer.graphqlPath}`
     );
 
-    updateServers();
-
-    setInterval(() => {
-      updateServers();
-    }, 10000);
+    cron.schedule("*/30 * * * * *", () => {
+      updateServersPeriodically();
+    });
   });
 
   httpsServer.listen(config.servers.httpsPort, () => {
