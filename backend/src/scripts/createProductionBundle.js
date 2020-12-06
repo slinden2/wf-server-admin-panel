@@ -5,6 +5,7 @@ Script for creating the production bundle.
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 const path = require("path");
+const fs = require("fs");
 
 const removeDir = require("./removeDir");
 
@@ -23,8 +24,19 @@ const buildFrontend = async () => {
 };
 
 const moveFrontendToBackendDir = async () => {
-  await exec("move ../frontend/build ./dist");
-  await exec('ren "./dist/build" "client"');
+  const currentPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    "frontend",
+    "build"
+  );
+  const destinationPath = path.join(__dirname, "..", "..", "dist", "client");
+  if (fs.existsSync(!destinationPath)) {
+    fs.mkdirSync(destinationPath);
+  }
+  await fs.promises.rename(currentPath, destinationPath);
 };
 
 const main = async () => {
