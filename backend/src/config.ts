@@ -77,8 +77,8 @@ const connParams: ConnectionOptions = {
 const certOptions =
   env === "production"
     ? {
-        key: fs.readFileSync("c:\\certs\\private.key"),
-        cert: fs.readFileSync("c:\\certs\\certificate.crt"),
+        key: fs.readFileSync("C:\\Certbot\\live\\rabot.biz\\privkey.pem"),
+        cert: fs.readFileSync("C:\\Certbot\\live\\rabot.biz\\cert.pem"),
       }
     : {};
 
